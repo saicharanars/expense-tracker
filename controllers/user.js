@@ -44,8 +44,8 @@ exports.postLogin = async (req, res, next) => {
   try {
     const Email = req.body.email;
     const Password = req.body.password;
-    console.log(Email, Password);
-    console.log(req.body);
+    //console.log(Email, Password);
+    //console.log(req.body);
     const emailfind = await ExpenseUsers.findOne({
       where: {
         email: Email,
@@ -55,16 +55,12 @@ exports.postLogin = async (req, res, next) => {
     if (!emailfind) {
       res.status(404).json({ users: "email not exits please signup" });
     } else {
-      bcrypt.compare(Password, emailfind.password, (err, resp) => {
-        console.log(resp);
-        if (resp) {
-          res.status(200).json({ user: emailfind, login: "login sucessfull" });
-        } else {
-          res
-            .status(401)
-            .json({ login: "check your password", user: emailfind });
-        }
-      });
+      const resp = await bcrypt.compare(Password, emailfind.password);
+      if (resp) {
+        res.status(200).json({ login: resp });
+      } else {
+        res.status(401).json({ login: "check your password" });
+      }
       // if (emailfind.password === Password) {
       //   res.status(200).json({ user: emailfind, login: "login sucessfull" });
       // } else {

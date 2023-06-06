@@ -1,5 +1,6 @@
 const Sequelize = require("sequelize");
 const sequelize = require("../util/database");
+const Expense =require("./expense")
 
 const Expenseusers = sequelize.define("expenseusers", {
   id: {
@@ -21,5 +22,6 @@ const Expenseusers = sequelize.define("expenseusers", {
     allowNull: false,
   },
 });
+
 
 module.exports = Expenseusers;
