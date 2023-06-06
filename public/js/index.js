@@ -4,6 +4,7 @@ async function expense(event) {
   const expenseamount = document.getElementById("amount").value;
   const expensetype = document.getElementById("etype").value;
   const category = document.getElementById("cat").value;
+  const token = localStorage.getItem('token');
   const obj = {
     expenseamount,
     category,
@@ -17,15 +18,22 @@ async function expense(event) {
   //   })
   //   .catch((err) => console.error(err));
   try {
-    const res = await axios.post(`${api}/add-expense`, obj);
+    const res = await axios.post(`${api}/add-expense`, obj,{headers: {'Authorization': token}});
     showexpenseonscreen(res.data.expenses);
   } catch (error) {
     console.log(error);
   }
 }
 window.addEventListener("DOMContentLoaded", async() => {
+  const token = localStorage.getItem('token');
+  const jwt = token;
+  const payloadBase64 = jwt.split(".")[1];
+  const base64 = payloadBase64.replace(/-/g, "+").replace(/_/g, "/");
+  const decodedJwt = JSON.parse(window.atob(base64));
+  console.log(decodedJwt);
   try {
-    const res = await axios.get(`${api}/get-data`);
+    const res = await axios.get(`${api}/get-data`,);
+
     console.log(res.data.expenses.length);
     for (let i = 0; i < res.data.expenses.length; i++) {
       showexpenseonscreen(res.data.expenses[i]);
@@ -65,7 +73,8 @@ function showexpenseonscreen(obj) {
     //   }
     // }).catch((err)=>console.error(err));
     try {
-    const res = await axios.delete(`${api}/delete-expense/${obj.id}`);
+      console.log(obj.id);
+    const res = await axios.delete(`${api}/delete-expense/${obj.id}`,{headers: {'Authorization': token}});
     console.log(res);
     if (obj.category === "grocery") {
       grocery.removeChild(childele);

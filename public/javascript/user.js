@@ -14,6 +14,8 @@ async function userlogin(event) {
     console.log(resp.data);
 
     if (resp.data.login) {
+      localStorage.setItem('token',resp.data.token);
+      console.log(localStorage.getItem('token'));
       window.location.href = "/";
     } else {
       console.log("fail");

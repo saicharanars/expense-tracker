@@ -15,11 +15,12 @@ app.use(userRoutes);
 app.use(express.static(path.join(__dirname, "public")));
 var cors = require("cors");
 app.use(cors());
-
+const User=require("./models/users")
+const Expense =require("./models/expense")
 const errorController = require("./controllers/errorcontroller");
 
-
-
+User.hasMany(Expense);
+Expense.belongsTo(User);
 
 
 
@@ -29,7 +30,7 @@ const errorController = require("./controllers/errorcontroller");
 app.use(errorController.get404);
 
 sequelize
-  .sync()
+  .sync({force:true})
   .then((result) => {
     // console.log(result);
     app.listen(3000);

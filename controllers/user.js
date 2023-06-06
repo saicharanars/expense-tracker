@@ -2,6 +2,7 @@ const path = require("path");
 const rootDir = path.dirname(__dirname);
 const ExpenseUsers = require("../models/users");
 var bcrypt = require("bcryptjs");
+var jwt = require('jsonwebtoken');
 
 exports.postSignup = async (req, res, next) => {
   try {
@@ -51,13 +52,17 @@ exports.postLogin = async (req, res, next) => {
         email: Email,
       },
     });
+    function jwtToken(){
+      return jwt.sign({useremail:emailfind.email,userid:emailfind.id},'hgtyf1f51ge5ef555sb1f5')
+    };
 
     if (!emailfind) {
       res.status(404).json({ users: "email not exits please signup" });
     } else {
       const resp = await bcrypt.compare(Password, emailfind.password);
+      
       if (resp) {
-        res.status(200).json({ login: resp });
+        res.status(200).json({ login: resp,data:emailfind,token:jwtToken() });
       } else {
         res.status(401).json({ login: "check your password" });
       }

@@ -13,10 +13,14 @@ exports.postExpense = async (req, res, next) => {
     const category = req.body.category;
     const expensetype = req.body.expensetype;
 
+    const userId = req.user.userid;
+    console.log(userId);
     const data = await Expense.create({
       expenseamount: expenseamount,
       category: category,
       expensetype: expensetype,
+      expenseuserId:userId
+      
     });
 
     res.status(200).json({ expenses: data });
@@ -40,12 +44,17 @@ exports.getData = async (req, res, next) => {
 
 exports.postDelete = async (req, res, next) => {
   try {
+    const userId = req.user.userid;
+    console.log(userId);
+
     if (!req.params.id) {
       console.log("ID IS MISSING");
       return res.status(400).json({ err: "ID is missing" });
     }
+    
     const uId = req.params.id;
-    await Expense.destroy({ where: { id: uId } });
+    const owner = await Expense.findOne({ where: { id: uId,expenseuserId:userId } });
+    owner.destroy();
 
     res.sendStatus(200);
   } catch (err) {
