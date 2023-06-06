@@ -18,12 +18,12 @@ exports.postSignup = async (req, res, next) => {
       },
     });
     if (!created) {
-        res.status(200).json({ users: "email already used",emailexist:created}); // This will certainly be 'Technical Lead JavaScript'
-    }else{
-        res.status(200).json({ users: user,emailexist:created });
+      res
+        .status(200)
+        .json({ users: "email already used", emailexist: created }); // This will certainly be 'Technical Lead JavaScript'
+    } else {
+      res.status(200).json({ users: user, emailexist: created });
     }
-
-    
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -34,4 +34,37 @@ exports.postSignup = async (req, res, next) => {
 
 exports.getSignup = async (req, res, next) => {
   res.sendFile(path.join(rootDir, "views", "signup.html"));
+};
+exports.getLogin = async (req, res, next) => {
+  res.sendFile(path.join(rootDir, "views", "loginpage.html"));
+};
+exports.postLogin = async (req, res, next) => {
+  try {
+    const Email = req.body.email;
+    const Password = req.body.password;
+    console.log(Email, Password);
+    console.log(req.body);
+    const emailfind = await ExpenseUsers.findOne({
+      where: {
+        email: Email,
+      },
+    });
+
+    if (!emailfind) {
+      res
+        .status(404)
+        .json({ users: "email not exits please signup" });
+    } else {
+      if (emailfind.password === Password) {
+        res.status(200).json({ user: emailfind, login: "login sucessfull" });
+      } else {
+        res.status(401).json({ login: "check your password" });
+      }
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      error: error,
+    });
+  }
 };
