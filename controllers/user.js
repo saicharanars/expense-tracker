@@ -18,9 +18,9 @@ exports.postSignup = async (req, res, next) => {
       },
     });
     if (!created) {
-        res.status(200).json({ users: "email already used"}); // This will certainly be 'Technical Lead JavaScript'
+        res.status(200).json({ users: "email already used",emailexist:created}); // This will certainly be 'Technical Lead JavaScript'
     }else{
-        res.status(200).json({ users: "success" });
+        res.status(200).json({ users: user,emailexist:created });
     }
 
     

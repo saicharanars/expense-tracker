@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body>
+
+    <div class="mx-auto max-w-sm p-10 m-10">
+        <h1 class="text-3xl text-emerald-400">Login to your app</h1>
+        <form class="mt-8 space-y-6"  onsubmit="user(event)"">
+            
+            <input
+                class="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
+                type="text" 
+                type="text" name="email" id="email" placeholder="email" required>
+            <input
+                class="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
+                type="text" type="text" name="password" id="password" placeholder="password" required>
+          
+            <button
+                class="mt-5 tracking-wide font-semibold bg-emerald-500 text-gray-100 w-full py-4 rounded-lg hover:bg-emerald-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
+                type="submit">submit</button>
+        </form>
+
+    </div>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"
+    integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="/javascript/index.js"></script>
+</body>
+
+</html>

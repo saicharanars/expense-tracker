@@ -4,7 +4,7 @@ const sequelize = require("../util/database");
 const Expenseusers = sequelize.define("expenseusers", {
   id: {
     type: Sequelize.INTEGER,
-    
+    allowNull: false,
     autoIncrement: true,
     primaryKey: true,
   },
