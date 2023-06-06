@@ -1,6 +1,7 @@
 const path = require("path");
 const rootDir = path.dirname(__dirname);
 const ExpenseUsers = require("../models/users");
+var bcrypt = require("bcryptjs");
 
 exports.postSignup = async (req, res, next) => {
   try {
@@ -10,11 +11,12 @@ exports.postSignup = async (req, res, next) => {
     const Password = req.body.password;
     console.log(Username, Email, Password);
     console.log(req.body);
+    const hashedPassword = await bcrypt.hash(Password, 10);
     const [user, created] = await ExpenseUsers.findOrCreate({
       where: { email: Email },
       defaults: {
         username: Username,
-        password: Password,
+        password: hashedPassword,
       },
     });
     if (!created) {
@@ -51,15 +53,23 @@ exports.postLogin = async (req, res, next) => {
     });
 
     if (!emailfind) {
-      res
-        .status(404)
-        .json({ users: "email not exits please signup" });
+      res.status(404).json({ users: "email not exits please signup" });
     } else {
-      if (emailfind.password === Password) {
-        res.status(200).json({ user: emailfind, login: "login sucessfull" });
-      } else {
-        res.status(401).json({ login: "check your password" });
-      }
+      bcrypt.compare(Password, emailfind.password, (err, resp) => {
+        console.log(resp);
+        if (resp) {
+          res.status(200).json({ user: emailfind, login: "login sucessfull" });
+        } else {
+          res
+            .status(401)
+            .json({ login: "check your password", user: emailfind });
+        }
+      });
+      // if (emailfind.password === Password) {
+      //   res.status(200).json({ user: emailfind, login: "login sucessfull" });
+      // } else {
+      //   res.status(401).json({ login: "check your password" });
+      // }
     }
   } catch (error) {
     console.log(error);
