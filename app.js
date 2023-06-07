@@ -17,10 +17,18 @@ var cors = require("cors");
 app.use(cors());
 const User=require("./models/users")
 const Expense =require("./models/expense")
+const Order=require("./models/orders");
+const purchaseRoutes=require("./routes/purchase");
+app.use("/purchase/",purchaseRoutes);
 const errorController = require("./controllers/errorcontroller");
+const Premium= require("./models/premiumuser");
 
 User.hasMany(Expense);
 Expense.belongsTo(User);
+User.hasMany(Order);
+Order.belongsTo(User);
+Premium.belongsTo(User);
+
 
 
 
@@ -30,7 +38,7 @@ Expense.belongsTo(User);
 app.use(errorController.get404);
 
 sequelize
-  .sync({force:true})
+  .sync()
   .then((result) => {
     // console.log(result);
     app.listen(3000);
