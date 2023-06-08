@@ -21,7 +21,11 @@ const Expenseusers = sequelize.define("expenseusers", {
     type: Sequelize.STRING,
     allowNull: false,
   },
-  isPremiumUser:Sequelize.BOOLEAN
+  isPremiumUser:Sequelize.BOOLEAN,
+  totalExpenses: {
+    type: Sequelize.INTEGER,
+    defaultValue: 0
+  }
 });
 
 

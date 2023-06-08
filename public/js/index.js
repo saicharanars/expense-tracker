@@ -55,7 +55,7 @@ function showLeaderboard() {
     var leaderboardElem = document.getElementById("leaderboardlist");
     leaderboardElem.innerHTML += "<h1> Leader Board</h1>";
     userLeaderBoardArray.data.forEach((userDetails) => {
-      leaderboardElem.innerHTML += `<li>Name - ${userDetails.username} Total Expenses - ${userDetails.total_cost} `;
+      leaderboardElem.innerHTML += `<li>Name - ${userDetails.username} Total Expenses - ${userDetails.totalExpenses} `;
     });
   };
   document.getElementById("leaderboardlist").appendChild(inputElement);

@@ -4,6 +4,7 @@ const ExpenseUsers = require("../models/users");
 var bcrypt = require("bcryptjs");
 var jwt = require('jsonwebtoken');
 
+
 exports.postSignup = async (req, res, next) => {
   try {
     //const { name, email, phone } = req.body;
@@ -18,6 +19,7 @@ exports.postSignup = async (req, res, next) => {
       defaults: {
         username: Username,
         password: hashedPassword,
+        totalExpenses:0
       },
     });
     if (!created) {
@@ -53,7 +55,7 @@ exports.postLogin = async (req, res, next) => {
       },
     });
     function jwtToken(){
-      return jwt.sign({useremail:emailfind.email,userid:emailfind.id},'hgtyf1f51ge5ef555sb1f5')
+      return jwt.sign({useremail:emailfind.email,userid:emailfind.id,totalExpenses:emailfind.totalExpenses},'hgtyf1f51ge5ef555sb1f5')
     };
 
     if (!emailfind) {
@@ -79,3 +81,6 @@ exports.postLogin = async (req, res, next) => {
     });
   }
 };
+exports.createOrder = async (req, res, next) => {
+  
+}

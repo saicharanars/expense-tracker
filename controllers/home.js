@@ -3,7 +3,7 @@ const path = require("path");
 const rootDir = path.dirname(process.mainModule.filename);
 const Expense = require("../models/expense");
 const User = require("../models/users");
-const sequelize = require('../util/database');
+const sequelize = require("../util/database");
 exports.getExpense = async (req, res, next) => {
   res.sendFile(path.join(rootDir, "views", "index.html"));
 };
@@ -22,6 +22,18 @@ exports.postExpense = async (req, res, next) => {
       expensetype: expensetype,
       expenseuserId: userId,
     });
+    const totalExpense = Number(req.user.totalExpenses) + Number(expenseamount);
+    console.log(req.user);
+    console.log(totalExpense);
+    const userupdte = await User.update(
+      {
+        totalExpenses: totalExpense,
+      },
+      {
+        where: { id: userId },
+      }
+    );
+    console.log(userupdte);
 
     res.status(200).json({ expenses: data });
   } catch (error) {
@@ -68,19 +80,7 @@ exports.postDelete = async (req, res, next) => {
 exports.getUserLeaderBoard = async (req, res, next) => {
   try {
     const userLeaderBoardDetails = await User.findAll({
-      attributes: [
-        "id",
-        "username",
-        [sequelize.fn("sum", sequelize.col("expenses.expenseamount")), "total_cost"],
-      ],
-      include: [
-        {
-          model: Expense,
-          attributes: [],
-        },
-      ],
-      group: ["id"],
-      order: [["total_cost", "DESC"]],
+      order: [["totalExpenses", "DESC"]],
     });
     console.log(userLeaderBoardDetails);
 
