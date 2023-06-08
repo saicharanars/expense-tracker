@@ -22,12 +22,17 @@ const purchaseRoutes=require("./routes/purchase");
 app.use("/purchase/",purchaseRoutes);
 const errorController = require("./controllers/errorcontroller");
 const Premium= require("./models/premiumuser");
-
+const forgetPasswordRoutes = require('./routes/forgotpassword');
+const Forgotpassword = require('./models/forgotpassword');
+app.use('/password',forgetPasswordRoutes);
 User.hasMany(Expense);
 Expense.belongsTo(User);
 User.hasMany(Order);
 Order.belongsTo(User);
 Premium.belongsTo(User);
+User.hasMany(Forgotpassword);
+
+Forgotpassword.belongsTo(User);
 
 
 
