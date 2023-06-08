@@ -75,7 +75,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   }
   
   try {
-    const res = await axios.get(`${api}/get-data`);
+    const res = await axios.get(`${api}/get-data/${userid}`);
 
     console.log(res.data.expenses.length);
     for (let i = 0; i < res.data.expenses.length; i++) {

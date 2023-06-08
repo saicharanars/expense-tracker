@@ -10,6 +10,7 @@ exports.getExpense = async (req, res, next) => {
 exports.postExpense = async (req, res, next) => {
   try {
     //const { name, email, phone } = req.body;
+    t = await sequelize.transaction();
     const expenseamount = req.body.expenseamount;
     const category = req.body.category;
     const expensetype = req.body.expensetype;
@@ -21,22 +22,26 @@ exports.postExpense = async (req, res, next) => {
       category: category,
       expensetype: expensetype,
       expenseuserId: userId,
-    });
-    const totalExpense = Number(req.user.totalExpenses) + Number(expenseamount);
+      
+    },{transaction: t});
+    //const totalExpense = Number(req.user.totalExpenses) + Number(expenseamount);
     console.log(req.user);
-    console.log(totalExpense);
+  
     const userupdte = await User.update(
       {
-        totalExpenses: totalExpense,
+        totalExpenses: sequelize.literal(`totalExpenses + ${expenseamount}`),
+        updatedAt: new Date()
       },
       {
         where: { id: userId },
-      }
+        transaction: t
+      },
+     
     );
-    console.log(userupdte);
-
+    await t.commit();
     res.status(200).json({ expenses: data });
   } catch (error) {
+    if (t) await t.rollback();
     console.log(error);
     res.status(500).json({
       error: error,
@@ -46,7 +51,8 @@ exports.postExpense = async (req, res, next) => {
 
 exports.getData = async (req, res, next) => {
   try {
-    const data = await Expense.findAll();
+    uId=req.params.id
+    const data = await Expense.findAll({ where: { id: uId } });
     res.status(200).json({ expenses: data });
   } catch (error) {
     console.log(error);
@@ -55,7 +61,9 @@ exports.getData = async (req, res, next) => {
 };
 
 exports.postDelete = async (req, res, next) => {
+  let t;
   try {
+    t = await sequelize.transaction();
     const userId = req.user.userid;
     console.log(userId);
 
@@ -68,11 +76,27 @@ exports.postDelete = async (req, res, next) => {
     const owner = await Expense.findOne({
       where: { id: uId, expenseuserId: userId },
     });
-    owner.destroy();
-
+    
+    console.log(owner,uId)
+    const expensedeleteupdte = await User.update(
+      {
+        totalExpenses: sequelize.literal(`totalExpenses - ${owner.expenseamount}`),
+        updatedAt: new Date()
+      },
+      {
+        where: { id: uId },
+        transaction: t
+      },
+     
+    );
+    
+    await owner.destroy({transaction:t});
+    await t.commit();
+      
     res.sendStatus(200);
   } catch (err) {
     console.log(err);
+    await t.rollback();
     res.status(500).json(err);
   }
 };

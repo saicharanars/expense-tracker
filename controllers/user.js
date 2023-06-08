@@ -55,7 +55,7 @@ exports.postLogin = async (req, res, next) => {
       },
     });
     function jwtToken(){
-      return jwt.sign({useremail:emailfind.email,userid:emailfind.id,totalExpenses:emailfind.totalExpenses},'hgtyf1f51ge5ef555sb1f5')
+      return jwt.sign({useremail:emailfind.email,userid:emailfind.id,totalExpenses:emailfind.totalExpenses,premium:emailfind.isPremiumUser},'hgtyf1f51ge5ef555sb1f5')
     };
 
     if (!emailfind) {
