@@ -3,7 +3,7 @@ const path = require("path");
 const rootDir = path.dirname(process.mainModule.filename);
 const Expense = require("../models/expense");
 const User = require("../models/users");
-
+const sequelize = require('../util/database');
 exports.getExpense = async (req, res, next) => {
   res.sendFile(path.join(rootDir, "views", "index.html"));
 };
@@ -20,8 +20,7 @@ exports.postExpense = async (req, res, next) => {
       expenseamount: expenseamount,
       category: category,
       expensetype: expensetype,
-      expenseuserId:userId
-      
+      expenseuserId: userId,
     });
 
     res.status(200).json({ expenses: data });
@@ -52,9 +51,11 @@ exports.postDelete = async (req, res, next) => {
       console.log("ID IS MISSING");
       return res.status(400).json({ err: "ID is missing" });
     }
-    
+
     const uId = req.params.id;
-    const owner = await Expense.findOne({ where: { id: uId,expenseuserId:userId } });
+    const owner = await Expense.findOne({
+      where: { id: uId, expenseuserId: userId },
+    });
     owner.destroy();
 
     res.sendStatus(200);
@@ -64,26 +65,28 @@ exports.postDelete = async (req, res, next) => {
   }
 };
 
-exports.getUserLeaderBoard = async (req, res,next) => {
+exports.getUserLeaderBoard = async (req, res, next) => {
   try {
-      const [users, expenses] = await Promise.all([User.findAll(), Expense.findAll()]);
-      console.log(users);
-      const userAggregatedExpenses = expenses.reduce((acc, expense) => {
-          acc[expense.expenseuserId] = (acc[expense.expenseuserId] || 0) + expense.expenseamount;
-          return acc;
-      }, {});
+    const userLeaderBoardDetails = await User.findAll({
+      attributes: [
+        "id",
+        "username",
+        [sequelize.fn("sum", sequelize.col("expenses.expenseamount")), "total_cost"],
+      ],
+      include: [
+        {
+          model: Expense,
+          attributes: [],
+        },
+      ],
+      group: ["id"],
+      order: [["total_cost", "DESC"]],
+    });
+    console.log(userLeaderBoardDetails);
 
-      const userLeaderBoardDetails = users.map(user => ({
-          name: user.username,
-          total_cost: userAggregatedExpenses[user.id] || 0,
-      }));
-
-      userLeaderBoardDetails.sort((a, b) => b.total_cost - a.total_cost);
-      console.log(userLeaderBoardDetails);
-
-      res.status(200).json(userLeaderBoardDetails);
+    res.status(200).json(userLeaderBoardDetails);
   } catch (err) {
-      console.log(err);
-      res.status(500).json(err);
+    console.log(err);
+    res.status(500).json(err);
   }
-}
+};

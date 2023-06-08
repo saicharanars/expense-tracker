@@ -55,7 +55,7 @@ function showLeaderboard() {
     var leaderboardElem = document.getElementById("leaderboardlist");
     leaderboardElem.innerHTML += "<h1> Leader Board</h1>";
     userLeaderBoardArray.data.forEach((userDetails) => {
-      leaderboardElem.innerHTML += `<li>Name - ${userDetails.name} Total Expenses - ${userDetails.total_cost} `;
+      leaderboardElem.innerHTML += `<li>Name - ${userDetails.username} Total Expenses - ${userDetails.total_cost} `;
     });
   };
   document.getElementById("leaderboardlist").appendChild(inputElement);
@@ -64,6 +64,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   const token = localStorage.getItem("token");
   const decodeToken = parseJwt(token);
   const premiumUser = decodeToken.premium;
+  userid=decodeToken.userid
   console.log(decodeToken);
   if (premiumUser) {
     document.getElementById("rzp-button1").style.visibility = "hidden";
