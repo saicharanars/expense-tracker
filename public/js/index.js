@@ -26,8 +26,53 @@ async function expense(event) {
     console.log(error);
   }
 }
+function parseJwt(token) {
+  var base64Url = token.split(".")[1];
+  var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+  var jsonPayload = decodeURIComponent(
+    window
+      .atob(base64)
+      .split("")
+      .map(function (c) {
+        return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+      })
+      .join("")
+  );
+
+  return JSON.parse(jsonPayload);
+}
+function showLeaderboard() {
+  const inputElement = document.createElement("input");
+  inputElement.type = "button";
+  inputElement.value = "Show Leaderboard";
+  inputElement.onclick = async () => {
+    const token = localStorage.getItem("token");
+    const userLeaderBoardArray = await axios.get(
+      "http://localhost:3000/showLeaderBoard",
+      { headers: { Authorization: token } }
+    );
+    console.log(userLeaderBoardArray);
+    var leaderboardElem = document.getElementById("leaderboardlist");
+    leaderboardElem.innerHTML += "<h1> Leader Board</h1>";
+    userLeaderBoardArray.data.forEach((userDetails) => {
+      leaderboardElem.innerHTML += `<li>Name - ${userDetails.name} Total Expenses - ${userDetails.total_cost} `;
+    });
+  };
+  document.getElementById("leaderboardlist").appendChild(inputElement);
+}
 window.addEventListener("DOMContentLoaded", async () => {
   const token = localStorage.getItem("token");
+  const decodeToken = parseJwt(token);
+  const premiumUser = decodeToken.premium;
+  console.log(decodeToken);
+  if (premiumUser) {
+    document.getElementById("rzp-button1").style.visibility = "hidden";
+    document.getElementById("premiummessage").innerHTML =
+      "you are premium user";
+    document.getElementById("leaderboard").style.visibility = "show"; 
+    showLeaderboard(); 
+  }
+  
   try {
     const res = await axios.get(`${api}/get-data`);
 
@@ -100,45 +145,58 @@ function showexpenseonscreen(obj) {
   }
 }
 document.getElementById("rzp-button1").onclick = async function (e) {
-  const token=localStorage.getItem('token');
+  const token = localStorage.getItem("token");
   console.log(token);
-  axios.get(`${api}/purchase/premium`, {headers: {'Authorization': token}})
-  .then((res) => {
-      console.log(res)
+  axios
+    .get(`${api}/purchase/premium`, { headers: { Authorization: token } })
+    .then((res) => {
+      console.log(res);
       const options = {
-          "key": res.data.key_id, //enter the key id generated from the dashboard
-          "order_id": res.data.order.id, //for one time payment
-          "handler": async function () {
-              try{
-                  const res1 = await axios.post(`${api}/purchase/update-transaction-status`, {
-                      status: 'success',
-                      order_id: options.order_id,
-                      payment_id: res.razorpay_payment_id
-                  }, {headers: {'Authorization': token}});
-                  alert('Congrats! You are now a Premium user!');
-                  localStorage.setItem('token', res1.data.token);
-                  //showUserInfoInDOM();
-              }catch(err){
-                  console.log(err);
-              }
+        key: res.data.key_id, //enter the key id generated from the dashboard
+        order_id: res.data.order.id, //for one time payment
+        handler: async function () {
+          try {
+            const res1 = await axios.post(
+              `${api}/purchase/update-transaction-status`,
+              {
+                status: "success",
+                order_id: options.order_id,
+                payment_id: res.razorpay_payment_id,
+              },
+              { headers: { Authorization: token } }
+            );
+            alert("Congrats! You are now a Premium user!");
+            document.getElementById("rzp-button1").style.visibility = "hidden";
+            document.getElementById("premiummessage").innerHTML =
+              "you are premium user";
+
+            localStorage.setItem("token", res1.data.token);
+            //showUserInfoInDOM();
+          } catch (err) {
+            console.log(err);
           }
+        },
       };
 
       const rzp1 = new Razorpay(options);
-      rzp1.on('payment.failed', async (err) => {
-          try{
-              await axios.post(`${HOST}/purchase/update-transaction-status`, {
-                  status: 'failed',
-                  order_id: err.error.metadata.order_id
-              }, {headers: {'Authorization': token}});
-              alert('Payment Failed!');
-          }catch(err){
-              console.log(err);
-          }
+      rzp1.on("payment.failed", async (err) => {
+        try {
+          await axios.post(
+            `${api}/purchase/update-transaction-status`,
+            {
+              status: "failed",
+              order_id: err.error.metadata.order_id,
+            },
+            { headers: { Authorization: token } }
+          );
+          alert("Payment Failed!");
+        } catch (err) {
+          console.log(err);
+        }
       });
 
       rzp1.open();
       e.preventDefault();
-  })
-  .catch((err) => console.log(err));
+    })
+    .catch((err) => console.log(err));
 };

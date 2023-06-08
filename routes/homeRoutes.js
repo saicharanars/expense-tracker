@@ -11,6 +11,7 @@ router.get("/",homeController.getExpense);
 router.get("/get-data",homeController.getData);
 router.post("/add-expense",auth.authenticate,homeController.postExpense);
 router.delete('/delete-expense/:id',auth.authenticate,homeController.postDelete);
+router.get('/showLeaderBoard',auth.authenticate,homeController.getUserLeaderBoard);
 
 
 module.exports = router;

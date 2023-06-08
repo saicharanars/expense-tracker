@@ -2,6 +2,7 @@ const { error, Console } = require("console");
 const path = require("path");
 const rootDir = path.dirname(process.mainModule.filename);
 const Expense = require("../models/expense");
+const User = require("../models/users");
 
 exports.getExpense = async (req, res, next) => {
   res.sendFile(path.join(rootDir, "views", "index.html"));
@@ -63,3 +64,26 @@ exports.postDelete = async (req, res, next) => {
   }
 };
 
+exports.getUserLeaderBoard = async (req, res,next) => {
+  try {
+      const [users, expenses] = await Promise.all([User.findAll(), Expense.findAll()]);
+      console.log(users);
+      const userAggregatedExpenses = expenses.reduce((acc, expense) => {
+          acc[expense.expenseuserId] = (acc[expense.expenseuserId] || 0) + expense.expenseamount;
+          return acc;
+      }, {});
+
+      const userLeaderBoardDetails = users.map(user => ({
+          name: user.username,
+          total_cost: userAggregatedExpenses[user.id] || 0,
+      }));
+
+      userLeaderBoardDetails.sort((a, b) => b.total_cost - a.total_cost);
+      console.log(userLeaderBoardDetails);
+
+      res.status(200).json(userLeaderBoardDetails);
+  } catch (err) {
+      console.log(err);
+      res.status(500).json(err);
+  }
+}
