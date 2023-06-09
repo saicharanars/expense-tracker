@@ -34,6 +34,4 @@ async function userlogin(event) {
     console.log(error);
   }
 }
-function forgotpassword() {
-  window.location.href = "../forgotpassword.html"
-}
+
