@@ -68,21 +68,7 @@
         </div>
     </div>
     <div class="container p-2 w-100">
-        <div class="row w-75 p-2  column-gap-3">
-            <div class="col  w-25 p-2">
-                <h2>Grocery</h2>
-                <ul class="list-group" id="grocery"></ul>
-            </div>
-            <div class="col w-25 p-2">
-                <h2>Entertainment</h2>
-                <ul class="list-group" id="entertainment"></ul>
-            </div>
-            <div class="col w-25 p-2">
-                <h2>Maintenance</h2>
-                <ul class="list-group" id="maintenance"></ul>
-            </div>
-
-        </div>
+        <ul class="list-group" id="expenses"></ul>
         <div id="leaderboard">
             <h1>leaderboard</h1>
             <ul id="leaderboardlist">
@@ -92,7 +78,7 @@
         <div>
             <h1>monthly report</h1>
             <div>
-                <table class="table">
+                <table class="table" id="tablebody">
                     <thead>
                         <tr>
                             <th scope="col">Date</th>
@@ -101,91 +87,25 @@
                             <th scope="col">Expense</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>@mdo</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">2</th>
-                            <td>Jacob</td>
-                            <td>Thornton</td>
-                            <td>@fat</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">3</th>
-                            <td colspan="2">Larry the Bird</td>
-                            <td>@twitter</td>
-                        </tr>
-                    </tbody>
+                    <div >
+                        <tbody >
+
+
+                        </tbody>
+                    </div>
+                    
                 </table>
+                <div id="pagination"></div>
+                <div class="all">
+                    <ul id="list"></ul>
+                </div>
+                <div id="page-nav">
+                    <button id="prev-btn" disabled>Previous</button>
+                    <span id="page-info"></span>
+                    <button id="next-btn" disabled>Next</button>
+                </div>
             </div>
-            <h1>yearly report</h1>
-            <div>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">Date</th>
-                            <th scope="col">Description</th>
-                            <th scope="col">category</th>
-                            <th scope="col">Expense</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>@mdo</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">2</th>
-                            <td>Jacob</td>
-                            <td>Thornton</td>
-                            <td>@fat</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">3</th>
-                            <td colspan="2">Larry the Bird</td>
-                            <td>@twitter</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <h1>notes report</h1>
-            <div>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">Date</th>
-                            <th scope="col">Description</th>
-                            <th scope="col">category</th>
-                            <th scope="col">Expense</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>@mdo</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">2</th>
-                            <td>Jacob</td>
-                            <td>Thornton</td>
-                            <td>@fat</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">3</th>
-                            <td colspan="2">Larry the Bird</td>
-                            <td>@twitter</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            
             <button class="btn btn-lg w-100 btn-outline-primary" onclick="download()">Download report</button>
         </div>
     </div>

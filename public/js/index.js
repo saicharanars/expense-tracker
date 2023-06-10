@@ -1,4 +1,9 @@
 var api = "http://localhost:4000";
+//1
+const pagination = {
+  currentPage: 1,
+  itemsPerPage: 8,
+};
 async function expense(event) {
   event.preventDefault();
   const expenseamount = document.getElementById("amount").value;
@@ -21,6 +26,7 @@ async function expense(event) {
     const res = await axios.post(`${api}/add-expense`, obj, {
       headers: { Authorization: token },
     });
+    console.log(res);
     showexpenseonscreen(res.data.expenses);
   } catch (error) {
     console.log(error);
@@ -75,13 +81,16 @@ window.addEventListener("DOMContentLoaded", async () => {
   }
 
   try {
+    console.log("get-data");
     const res = await axios.get(`${api}/get-data/${userid}`);
-
+    console.log(res);
     console.log(res.data.expenses.length);
     for (let i = 0; i < res.data.expenses.length; i++) {
       showexpenseonscreen(res.data.expenses[i]);
-      console.log(res.data.expenses[i].expenseamount);
+      showtableonscreen(res.data.expenses[i]);
+      //console.log(res.data.expenses[i].expenseamount);
     }
+
   } catch (error) {
     console.log(error);
   }
@@ -133,18 +142,70 @@ function showexpenseonscreen(obj) {
   };
 
   childele.appendChild(deletebtn);
+  const expense = document.getElementById("expenses");
   //childele.appendChild(editbtn);
-  //grocery.appendChild(childele);
+  expense.appendChild(childele);
   //parentele.appendChild(childele);
+  const totalExpenses = expense.childElementCount;
+    pagination.totalPages = Math.ceil(totalExpenses / pagination.itemsPerPage);
+  
+    // Show only the expenses for the current page
+    const start = (pagination.currentPage - 1) * pagination.itemsPerPage;
+    const end = start + pagination.itemsPerPage;
+    for (let i = 0; i < totalExpenses; i++) {
+      expense.children[i].style.display =
+        i >= start && i < end ? "block" : "none";
+    }
+  
+    // Update page navigation buttons
+    const prevBtn = document.getElementById("prev-btn");
+    const nextBtn = document.getElementById("next-btn");
+    prevBtn.disabled = pagination.currentPage === 1;
+    nextBtn.disabled = pagination.currentPage === pagination.totalPages;
+    const pageInfo = document.getElementById("page-info");
+    pageInfo.textContent = `Page ${pagination.currentPage} of ${pagination.totalPages}`;
+  };
+//3
+const prevBtn = document.getElementById("prev-btn");
+const nextBtn = document.getElementById("next-btn");
 
-  if (obj.category === "grocery") {
-    grocery.appendChild(childele);
-  } else if (obj.category === "entertainment") {
-    entertainment.appendChild(childele);
-  } else {
-    maintenance.appendChild(childele);
-  }
+prevBtn.addEventListener("click", () => {
+  pagination.currentPage--;
+  showexpenseonscreen({});
+});
+
+nextBtn.addEventListener("click", () => {
+  pagination.currentPage++;
+  showexpenseonscreen({});
+});
+
+//4 
+  
+
+function showtableonscreen(obj) {
+  const table = document.getElementById("tablebody");
+  const tr = document.createElement("tr");
+
+  const id = document.createElement("th");
+  id.textContent = obj.id;
+  tr.appendChild(id);
+
+  const expenseamount = document.createElement("th");
+  expenseamount.textContent = obj.expenseamount;
+  tr.appendChild(expenseamount);
+
+  const expensecategory = document.createElement("th");
+  expensecategory.textContent = obj.category;
+  tr.appendChild(expensecategory);
+
+  const expensetype = document.createElement("th");
+  expensetype.textContent = obj.expensetype;
+  tr.appendChild(expensetype);
+
+  table.appendChild(tr);
 }
+
+
 document.getElementById("rzp-button1").onclick = async function (e) {
   const token = localStorage.getItem("token");
   console.log(token);
@@ -203,12 +264,9 @@ document.getElementById("rzp-button1").onclick = async function (e) {
 async function downloadFileList() {
   try {
     const token = localStorage.getItem("token");
-    const response = await axios.get(
-      "http://localhost:3000/download",
-      {
-        headers: { Authorization: token },
-      }
-    );
+    const response = await axios.get("http://localhost:3000/download", {
+      headers: { Authorization: token },
+    });
     if (response.status === 200) {
       const downloadedFiles = response.data.downloads;
       console.log(downloadedFiles);
@@ -220,7 +278,6 @@ async function downloadFileList() {
         fileLink.href = downloadedFiles[i].fileURL;
         fileLink.textContent = downloadedFiles[i].fileName;
         downloadList.appendChild(fileLink);
-        
       }
     } else {
       throw new Error(response.data.message);
@@ -230,24 +287,25 @@ async function downloadFileList() {
   }
 }
 async function download() {
-    try {
-           const token = localStorage.getItem("token");
-           const response = await axios.get('http://localhost:3000/download', { headers: { "Authorization": token } });
-            if (response.status === 200) {
-           var a = document.createElement("a");
-            a.href = response.data.fileURL;
-            a.download = 'myexpense.txt';
-            a.innerText=response.data.fileURL;
-             a.click();
-             const downloadlist=document.getElementById("download-list");
-             const li= document.createElement("li")
-             li.append(a)
-             downloadlist.append(li)
-
-           } else {
-               throw new Error(response.data.message);
-            }
-        } catch (err) {
-               window.alert(err);
-            }
+  try {
+    const token = localStorage.getItem("token");
+    const response = await axios.get("http://localhost:3000/download", {
+      headers: { Authorization: token },
+    });
+    if (response.status === 200) {
+      var a = document.createElement("a");
+      a.href = response.data.fileURL;
+      a.download = "myexpense.txt";
+      a.innerText = response.data.fileURL;
+      a.click();
+      const downloadlist = document.getElementById("download-list");
+      const li = document.createElement("li");
+      li.append(a);
+      downloadlist.append(li);
+    } else {
+      throw new Error(response.data.message);
+    }
+  } catch (err) {
+    window.alert(err);
+  }
 }

@@ -55,7 +55,8 @@ exports.postExpense = async (req, res, next) => {
 exports.getData = async (req, res, next) => {
   try {
     uId=req.params.id
-    const data = await Expense.findAll({ where: { id: uId } });
+    
+    const data = await Expense.findAll({ where: { expenseuserid: uId } });
     res.status(200).json({ expenses: data });
   } catch (error) {
     console.log(error);
