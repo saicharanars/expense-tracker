@@ -6,199 +6,206 @@
 <html>
 
 <head>
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>3 hours project on js</title>
-  <meta name="description" content="" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>3 hours project on js</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
 </head>
 
 <body>
-  <div class="container-xxl p-2">
-    <div class="row p-2">
-      <div class="col p-2">
-        <header class="p-2 text-center">
-          <h1>Expense Tracker</h1>
-          <!-- <h3>Enter Details</h3> -->
-          <button id="rzp-button1" class="btn btn-lg w-100 btn-outline-primary">Add Premium membership</button>
-          <div id="premiummessage"></div>
-        </header>
-      </div>
+    <div class="container-xxl p-2">
+        <div class="row p-2">
+            <div class="col p-2">
+                <header class="p-2 text-center">
+                    <h1>Expense Tracker</h1>
+                    <!-- <h3>Enter Details</h3> -->
+                    <button id="rzp-button1" class="btn btn-lg w-100 btn-outline-primary">Add Premium
+                        membership</button>
+                    <div id="premiummessage"></div>
+                </header>
+            </div>
 
-    </div>
-
-    <div class="container w-25 float-start  p-2">
-      <form onsubmit="expense(event)">
-        <div class=" container   align-items-start p-2">
-          <div class=" container  p-2 align-middle ">
-            <label for="exampleFormControlInput1" class="form-label">Expense Amount</label>
-            <input class="form-control form-control-lg" type="text" name="amount" id="amount" placeholder="amount" />
-          </div>
-          <div class=" container p-2 align-middle">
-            <label>Category</label>
-            <select class="form-select form-select-lg" aria-label="Default select example" name="category" id="cat">
-              <option selected value="grocery">grocery</option>
-              <option value="entertainment">entertainment</option>
-              <option value="maintenance">maintenance</option>
-            </select>
-          </div>
-          <div class=" container p-2 align-middle">
-            <label>Expense Type</label>
-            <select class="form-select-lg form-select" aria-label="Default select example name=" type" id="etype">
-              <option selected value="rice">rice</option>
-              <option value="movie">movie</option>
-              <option value="electric bill">electricity bill</option>
-            </select>
-          </div>
-          <div class=" container p-2 align-middle ">
-            <!-- <button  type="button"class="btn-lg btn-primary">SUBMIT</button> -->
-            <button class="btn btn-lg w-100 btn-outline-primary" type="submit">submit</button>
-          </div>
         </div>
 
+        <div class="container w-25 float-start  p-2">
+            <form onsubmit="expense(event)">
+                <div class=" container   align-items-start p-2">
+                    <div class=" container  p-2 align-middle ">
+                        <label for="exampleFormControlInput1" class="form-label">Expense Amount</label>
+                        <input class="form-control form-control-lg" type="text" name="amount" id="amount"
+                            placeholder="amount" />
+                    </div>
+                    <div class=" container p-2 align-middle">
+                        <label>Category</label>
+                        <select class="form-select form-select-lg" aria-label="Default select example" name="category"
+                            id="cat">
+                            <option selected value="grocery">grocery</option>
+                            <option value="entertainment">entertainment</option>
+                            <option value="maintenance">maintenance</option>
+                        </select>
+                    </div>
+                    <div class=" container p-2 align-middle">
+                        <label>Expense Type</label>
+                        <select class="form-select-lg form-select" aria-label="Default select example name=" type"
+                            id="etype">
+                            <option selected value="rice">rice</option>
+                            <option value="movie">movie</option>
+                            <option value="electric bill">electricity bill</option>
+                        </select>
+                    </div>
+                    <div class=" container p-2 align-middle ">
+                        <!-- <button  type="button"class="btn-lg btn-primary">SUBMIT</button> -->
+                        <button class="btn btn-lg w-100 btn-outline-primary" type="submit">submit</button>
+                    </div>
+                </div>
 
-      </form>
+
+            </form>
+        </div>
     </div>
-  </div>
-  <div class="container p-2 w-100">
-    <div class="row w-75 p-2  column-gap-3">
-      <div class="col  w-25 p-2">
-        <h2>Grocery</h2>
-        <ul class="list-group" id="grocery"></ul>
-      </div>
-      <div class="col w-25 p-2">
-        <h2>Entertainment</h2>
-        <ul class="list-group" id="entertainment"></ul>
-      </div>
-      <div class="col w-25 p-2">
-        <h2>Maintenance</h2>
-        <ul class="list-group" id="maintenance"></ul>
-      </div>
+    <div class="container p-2 w-100">
+        <div class="row w-75 p-2  column-gap-3">
+            <div class="col  w-25 p-2">
+                <h2>Grocery</h2>
+                <ul class="list-group" id="grocery"></ul>
+            </div>
+            <div class="col w-25 p-2">
+                <h2>Entertainment</h2>
+                <ul class="list-group" id="entertainment"></ul>
+            </div>
+            <div class="col w-25 p-2">
+                <h2>Maintenance</h2>
+                <ul class="list-group" id="maintenance"></ul>
+            </div>
 
+        </div>
+        <div id="leaderboard">
+            <h1>leaderboard</h1>
+            <ul id="leaderboardlist">
+
+            </ul>
+        </div>
+        <div>
+            <h1>monthly report</h1>
+            <div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Date</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">category</th>
+                            <th scope="col">Expense</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>Mark</td>
+                            <td>Otto</td>
+                            <td>@mdo</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">2</th>
+                            <td>Jacob</td>
+                            <td>Thornton</td>
+                            <td>@fat</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">3</th>
+                            <td colspan="2">Larry the Bird</td>
+                            <td>@twitter</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <h1>yearly report</h1>
+            <div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Date</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">category</th>
+                            <th scope="col">Expense</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>Mark</td>
+                            <td>Otto</td>
+                            <td>@mdo</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">2</th>
+                            <td>Jacob</td>
+                            <td>Thornton</td>
+                            <td>@fat</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">3</th>
+                            <td colspan="2">Larry the Bird</td>
+                            <td>@twitter</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <h1>notes report</h1>
+            <div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Date</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">category</th>
+                            <th scope="col">Expense</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>Mark</td>
+                            <td>Otto</td>
+                            <td>@mdo</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">2</th>
+                            <td>Jacob</td>
+                            <td>Thornton</td>
+                            <td>@fat</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">3</th>
+                            <td colspan="2">Larry the Bird</td>
+                            <td>@twitter</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <button class="btn btn-lg w-100 btn-outline-primary" onclick="download()">Download report</button>
+        </div>
     </div>
-    <div id="leaderboard">
-      <h1>leaderboard</h1>
-      <ul id="leaderboardlist">
 
-      </ul>
+
     </div>
     <div>
-      <h1>monthly report</h1>
-      <div>
-        <table class="table">
-          <thead>
-            <tr>
-              <th scope="col">Date</th>
-              <th scope="col">Description</th>
-              <th scope="col">category</th>
-              <th scope="col">Expense</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th scope="row">1</th>
-              <td>Mark</td>
-              <td>Otto</td>
-              <td>@mdo</td>
-            </tr>
-            <tr>
-              <th scope="row">2</th>
-              <td>Jacob</td>
-              <td>Thornton</td>
-              <td>@fat</td>
-            </tr>
-            <tr>
-              <th scope="row">3</th>
-              <td colspan="2">Larry the Bird</td>
-              <td>@twitter</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <h1>yearly report</h1>
-      <div>
-        <table class="table">
-          <thead>
-            <tr>
-              <th scope="col">Date</th>
-              <th scope="col">Description</th>
-              <th scope="col">category</th>
-              <th scope="col">Expense</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th scope="row">1</th>
-              <td>Mark</td>
-              <td>Otto</td>
-              <td>@mdo</td>
-            </tr>
-            <tr>
-              <th scope="row">2</th>
-              <td>Jacob</td>
-              <td>Thornton</td>
-              <td>@fat</td>
-            </tr>
-            <tr>
-              <th scope="row">3</th>
-              <td colspan="2">Larry the Bird</td>
-              <td>@twitter</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <h1>notes report</h1>
-      <div>
-        <table class="table">
-          <thead>
-            <tr>
-              <th scope="col">Date</th>
-              <th scope="col">Description</th>
-              <th scope="col">category</th>
-              <th scope="col">Expense</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th scope="row">1</th>
-              <td>Mark</td>
-              <td>Otto</td>
-              <td>@mdo</td>
-            </tr>
-            <tr>
-              <th scope="row">2</th>
-              <td>Jacob</td>
-              <td>Thornton</td>
-              <td>@fat</td>
-            </tr>
-            <tr>
-              <th scope="row">3</th>
-              <td colspan="2">Larry the Bird</td>
-              <td>@twitter</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <button class="btn btn-lg w-100 btn-outline-primary" type="submit">Download report</button>
+        <div id="download-list"></div>
     </div>
-  </div>
 
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
-  </div>
-  
-  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-  
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"
-    integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
-    crossorigin="anonymous"></script>
-  <script src="/js/index.js"></script>
-  <!--[if lt IE 7]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"
+        integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+        crossorigin="anonymous"></script>
+    <script src="/js/index.js"></script>
+    <!--[if lt IE 7]>
       <p class="browsehappy">
         You are using an <strong>outdated</strong> browser. Please
         <a href="#">upgrade your browser</a> to improve your experience.

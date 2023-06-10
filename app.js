@@ -24,6 +24,7 @@ const errorController = require("./controllers/errorcontroller");
 const Premium= require("./models/premiumuser");
 const forgetPasswordRoutes = require('./routes/forgotpassword');
 const Forgotpassword = require('./models/forgotpassword');
+const DownloadedFile=require('./models/download')
 app.use('/password',forgetPasswordRoutes);
 User.hasMany(Expense);
 Expense.belongsTo(User);
@@ -33,6 +34,8 @@ Premium.belongsTo(User);
 User.hasMany(Forgotpassword);
 
 Forgotpassword.belongsTo(User);
+User.hasMany(DownloadedFile);
+DownloadedFile.belongsTo(DownloadedFile);
 
 
 

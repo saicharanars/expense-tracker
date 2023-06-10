@@ -1,9 +1,12 @@
 const { error, Console } = require("console");
 const path = require("path");
-const rootDir = path.dirname(process.mainModule.filename);
+const rootDir = path.dirname(__dirname);
 const Expense = require("../models/expense");
 const User = require("../models/users");
 const sequelize = require("../util/database");
+const S3Service = require('../services/s3service');
+const UserServices = require('../services/userservices');
+const DownloadedFile = require('../models/download');
 exports.getExpense = async (req, res, next) => {
   res.sendFile(path.join(rootDir, "views", "index.html"));
 };
@@ -114,3 +117,32 @@ exports.getUserLeaderBoard = async (req, res, next) => {
     res.status(500).json(err);
   }
 };
+exports.downloadexpense = async(req,res,next)=>{
+    try{
+        const expenses =await UserServices.getExpenses(req);
+        //console.log("expenses",expenses)
+        const stringifiedExpenses = JSON.stringify(expenses);
+        //console.log(stringifiedExpenses);
+        // based on userId
+        const userId = req.user.userid;
+        console.log(req.user,"user");
+        const fileName =`Expense${userId}/${new Date()}.txt`;
+        const fileURL = await S3Service.uploadToS3(stringifiedExpenses, fileName);
+        //console.log(fileURL,"url",fileName,"name",userId);
+
+          // record the downloaded file
+          const downloadedFile = await DownloadedFile.create({
+            fileName,
+            downloadDate: new Date(),
+            userId: req.user.userid
+        });
+        //console.log(fileURL,"url",fileName,"name",userId);
+
+        res.status(200).json({fileURL, success:true })
+    }
+    catch(err){
+        console.log(err);
+        res.status(500).json({fileURL:'',success:false,err:err})
+
+    }
+}

@@ -2,8 +2,7 @@ const path = require("path");
 const rootDir = path.dirname(__dirname);
 const ExpenseUsers = require("../models/users");
 var bcrypt = require("bcryptjs");
-var jwt = require('jsonwebtoken');
-
+var jwt = require("jsonwebtoken");
 
 exports.postSignup = async (req, res, next) => {
   try {
@@ -19,7 +18,7 @@ exports.postSignup = async (req, res, next) => {
       defaults: {
         username: Username,
         password: hashedPassword,
-        totalExpenses:0
+        totalExpenses: 0,
       },
     });
     if (!created) {
@@ -48,23 +47,36 @@ exports.postLogin = async (req, res, next) => {
     const Email = req.body.email;
     const Password = req.body.password;
     //console.log(Email, Password);
-    //console.log(req.body);
+    console.log(req.body);
+    const find = await ExpenseUsers.findAll();
+    console.log(find);
     const emailfind = await ExpenseUsers.findOne({
       where: {
         email: Email,
       },
     });
-    function jwtToken(){
-      return jwt.sign({useremail:emailfind.email,userid:emailfind.id,totalExpenses:emailfind.totalExpenses,premium:emailfind.isPremiumUser},'hgtyf1f51ge5ef555sb1f5')
-    };
+    console.log(emailfind,"emailfind")
+    function jwtToken() {
+      return jwt.sign(
+        {
+          useremail: emailfind.email,
+          userid: emailfind.id,
+          totalExpenses: emailfind.totalExpenses,
+          premium: emailfind.isPremiumUser,
+        },
+        "hgtyf1f51ge5ef555sb1f5"
+      );
+    }
 
     if (!emailfind) {
       res.status(404).json({ users: "email not exits please signup" });
     } else {
       const resp = await bcrypt.compare(Password, emailfind.password);
-      
+
       if (resp) {
-        res.status(200).json({ login: resp,data:emailfind,token:jwtToken() });
+        res
+          .status(200)
+          .json({ login: resp, data: emailfind, token: jwtToken() });
       } else {
         res.status(401).json({ login: "check your password" });
       }
@@ -81,6 +93,4 @@ exports.postLogin = async (req, res, next) => {
     });
   }
 };
-exports.createOrder = async (req, res, next) => {
-  
-}
+

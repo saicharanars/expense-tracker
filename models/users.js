@@ -1,6 +1,8 @@
 const Sequelize = require("sequelize");
 const sequelize = require("../util/database");
 const Expense =require("./expense")
+const { Model } = require('sequelize');
+
 
 const Expenseusers = sequelize.define("expenseusers", {
   id: {
@@ -27,6 +29,10 @@ const Expenseusers = sequelize.define("expenseusers", {
     defaultValue: 0
   }
 });
+
+
+// Define the getExpenses function as an instance method
+
 
 
 module.exports = Expenseusers;

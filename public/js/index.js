@@ -64,16 +64,16 @@ window.addEventListener("DOMContentLoaded", async () => {
   const token = localStorage.getItem("token");
   const decodeToken = parseJwt(token);
   const premiumUser = decodeToken.premium;
-  userid=decodeToken.userid
+  userid = decodeToken.userid;
   console.log(decodeToken);
   if (premiumUser) {
     document.getElementById("rzp-button1").style.visibility = "hidden";
     document.getElementById("premiummessage").innerHTML =
       "you are premium user";
-    document.getElementById("leaderboard").style.visibility = "show"; 
-    showLeaderboard(); 
+    document.getElementById("leaderboard").style.visibility = "show";
+    showLeaderboard();
   }
-  
+
   try {
     const res = await axios.get(`${api}/get-data/${userid}`);
 
@@ -172,7 +172,6 @@ document.getElementById("rzp-button1").onclick = async function (e) {
               "you are premium user";
 
             localStorage.setItem("token", res1.data.token);
-            //showUserInfoInDOM();
           } catch (err) {
             console.log(err);
           }
@@ -201,3 +200,54 @@ document.getElementById("rzp-button1").onclick = async function (e) {
     })
     .catch((err) => console.log(err));
 };
+async function downloadFileList() {
+  try {
+    const token = localStorage.getItem("token");
+    const response = await axios.get(
+      "http://localhost:3000/download",
+      {
+        headers: { Authorization: token },
+      }
+    );
+    if (response.status === 200) {
+      const downloadedFiles = response.data.downloads;
+      console.log(downloadedFiles);
+      // Display the list of downloaded files on the screen
+      const downloadList = document.getElementById("download-list");
+      downloadList.innerHTML = "";
+      for (let i = 0; i < downloadedFiles.length; i++) {
+        const fileLink = document.createElement("a");
+        fileLink.href = downloadedFiles[i].fileURL;
+        fileLink.textContent = downloadedFiles[i].fileName;
+        downloadList.appendChild(fileLink);
+        
+      }
+    } else {
+      throw new Error(response.data.message);
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}
+async function download() {
+    try {
+           const token = localStorage.getItem("token");
+           const response = await axios.get('http://localhost:3000/download', { headers: { "Authorization": token } });
+            if (response.status === 200) {
+           var a = document.createElement("a");
+            a.href = response.data.fileURL;
+            a.download = 'myexpense.txt';
+            a.innerText=response.data.fileURL;
+             a.click();
+             const downloadlist=document.getElementById("download-list");
+             const li= document.createElement("li")
+             li.append(a)
+             downloadlist.append(li)
+
+           } else {
+               throw new Error(response.data.message);
+            }
+        } catch (err) {
+               window.alert(err);
+            }
+}
