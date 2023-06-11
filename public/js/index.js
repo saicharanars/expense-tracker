@@ -1,9 +1,8 @@
 var api = "http://localhost:4000";
 //1
-const pagination = {
-  currentPage: 1,
-  itemsPerPage: 8,
-};
+let currentPage = 1;
+let rowsPerPage = localStorage.getItem('rowsPerPage')?localStorage.getItem('rowsPerPage'):5;
+
 async function expense(event) {
   event.preventDefault();
   const expenseamount = document.getElementById("amount").value;
@@ -66,40 +65,39 @@ function showLeaderboard() {
   };
   document.getElementById("leaderboardlist").appendChild(inputElement);
 }
-window.addEventListener("DOMContentLoaded", async () => {
-  const token = localStorage.getItem("token");
-  const decodeToken = parseJwt(token);
-  const premiumUser = decodeToken.premium;
-  userid = decodeToken.userid;
-  console.log(decodeToken);
-  if (premiumUser) {
-    document.getElementById("rzp-button1").style.visibility = "hidden";
-    document.getElementById("premiummessage").innerHTML =
-      "you are premium user";
-    document.getElementById("leaderboard").style.visibility = "show";
-    showLeaderboard();
-  }
+// window.addEventListener("DOMContentLoaded", async () => {
+//   const token = localStorage.getItem("token");
+//   const decodeToken = parseJwt(token);
+//   const premiumUser = decodeToken.premium;
+//   userid = decodeToken.userid;
+//   console.log(decodeToken);
+//   if (premiumUser) {
+//     document.getElementById("rzp-button1").style.visibility = "hidden";
+//     document.getElementById("premiummessage").innerHTML =
+//       "you are premium user";
+//     document.getElementById("leaderboard").style.visibility = "show";
+//     showLeaderboard();
+//   }
 
-  try {
-    console.log("get-data");
-    const res = await axios.get(`${api}/get-data/${userid}`);
-    console.log(res);
-    console.log(res.data.expenses.length);
-    for (let i = 0; i < res.data.expenses.length; i++) {
-      showexpenseonscreen(res.data.expenses[i]);
-      showtableonscreen(res.data.expenses[i]);
-      //console.log(res.data.expenses[i].expenseamount);
-    }
+//   try {
+//     console.log("get-data");
+//     const res = await axios.get(`${api}/get-data/${userid}`);
+//     console.log(res);
+//     console.log(res.data.expenses.length);
+//     for (let i = 0; i < res.data.expenses.length; i++) {
+//       showexpenseonscreen(res.data.expenses[i]);
+//       showtableonscreen(res.data.expenses[i]);
+//       //console.log(res.data.expenses[i].expenseamount);
+//     }
 
-  } catch (error) {
-    console.log(error);
-  }
-});
+//   } catch (error) {
+//     console.log(error);
+//   }
+// });
+document.addEventListener('DOMContentLoaded', getExpenses); 
 function showexpenseonscreen(obj) {
-  const parentele = document.getElementById("listofitems");
-  const grocery = document.getElementById("grocery");
-  const maintenance = document.getElementById("maintenance");
-  const entertainment = document.getElementById("entertainment");
+  
+
   const childele = document.createElement("li");
   childele.className = "list-group-item";
   childele.textContent =
@@ -126,13 +124,8 @@ function showexpenseonscreen(obj) {
         headers: { Authorization: token },
       });
       console.log(res);
-      if (obj.category === "grocery") {
-        grocery.removeChild(childele);
-      } else if (obj.category === "entertainment") {
-        entertainment.removeChild(childele);
-      } else {
-        maintenance.removeChild(childele);
-      }
+      expense.removeChild(childele)
+      
     } catch (error) {
       console.log(error);
     }
@@ -146,42 +139,88 @@ function showexpenseonscreen(obj) {
   //childele.appendChild(editbtn);
   expense.appendChild(childele);
   //parentele.appendChild(childele);
-  const totalExpenses = expense.childElementCount;
-    pagination.totalPages = Math.ceil(totalExpenses / pagination.itemsPerPage);
   
-    // Show only the expenses for the current page
-    const start = (pagination.currentPage - 1) * pagination.itemsPerPage;
-    const end = start + pagination.itemsPerPage;
-    for (let i = 0; i < totalExpenses; i++) {
-      expense.children[i].style.display =
-        i >= start && i < end ? "block" : "none";
-    }
+};
+
+async function pagination(totalCount) {
+  try {
+    const maxPages = Math.ceil(totalCount / rowsPerPage);
+    document.getElementById('prev-btn').style.display = currentPage > 1 ? "block" : "none";
+    document.getElementById('next-btn').style.display = maxPages > currentPage ? "block" : "none";
+    document.getElementById('rows-per-page').value = rowsPerPage;
+    const start = (currentPage - 1) * rowsPerPage + 1;
+    const temp = start + Number(rowsPerPage) - 1;
+    const end = temp < totalCount ? temp : totalCount;
+    document.getElementById('page-details').textContent = `Showing ${start}-${end} of ${totalCount}`;
+  } catch (error) {
+    console.error(error);
+  }
   
-    // Update page navigation buttons
-    const prevBtn = document.getElementById("prev-btn");
-    const nextBtn = document.getElementById("next-btn");
-    prevBtn.disabled = pagination.currentPage === 1;
-    nextBtn.disabled = pagination.currentPage === pagination.totalPages;
-    const pageInfo = document.getElementById("page-info");
-    pageInfo.textContent = `Page ${pagination.currentPage} of ${pagination.totalPages}`;
+  document.getElementById('prev-btn').onclick = function() {
+    showPreviousPage(totalCount);
   };
-//3
-const prevBtn = document.getElementById("prev-btn");
-const nextBtn = document.getElementById("next-btn");
-
-prevBtn.addEventListener("click", () => {
-  pagination.currentPage--;
-  showexpenseonscreen({});
-});
-
-nextBtn.addEventListener("click", () => {
-  pagination.currentPage++;
-  showexpenseonscreen({});
-});
-
-//4 
   
+  document.getElementById('next-btn').onclick = function() {
+    showNextPage(totalCount);
+  };
+}
 
+async function getExpenses() {
+    // fetch data from server here and update the UI
+    document.getElementById("expenses").innerHTML = "";
+    try{
+      const token = localStorage.getItem('token');
+      const decodedToken = parseJwt(token);
+      const ispremiumuser = decodedToken.ispremiumuser;
+      if(ispremiumuser){
+          showPremiumuserMessage();
+          showLeaderboard();
+          showDownloadButtons();
+      };
+      const response = await axios.get(`http://localhost:3000/allexpenses?page=${currentPage}&rows=${rowsPerPage}`, { headers: {'Authorization': token}})
+     document.getElementById('expenses').innerHTML = "";
+     const { expenses, totalCount } = response.data;
+     pagination(totalCount);
+     if (expenses.length > 0) {
+         for (let i = 0; i < expenses.length; i++) {
+          showexpenseonscreen(response.data.expenses[i]);
+         }
+     } else {
+         document.getElementById('err').textContent = "Currently there are no Expenses!"
+     }
+  } catch (error) {
+     console.log(error);
+  }
+  }  
+  async function showChangedRows() {
+    try {
+      rowsPerPage = event.target.value;
+      localStorage.setItem('rowsPerPage', rowsPerPage);
+      location.reload();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  
+  async function showPreviousPage(totalCount) {
+    try {
+      currentPage--;
+      await getExpenses();
+      pagination(totalCount); // call pagination function after fetching data
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  
+  async function showNextPage(totalCount) {
+    try {
+      currentPage++;
+      await getExpenses();
+      pagination(totalCount); // call pagination function after fetching data
+    } catch (error) {
+      console.error(error);
+    }
+  }
 function showtableonscreen(obj) {
   const table = document.getElementById("tablebody");
   const tr = document.createElement("tr");

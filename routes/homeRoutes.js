@@ -15,5 +15,5 @@ router.delete('/delete-expense/:id',auth.authenticate,homeController.postDelete)
 router.get('/showLeaderBoard',auth.authenticate,homeController.getUserLeaderBoard);
 router.get('/download',auth.authenticate,homeController.downloadexpense);
 router.get('/downloadlist',auth.authenticate,downloadController.listDownloads);
-
+router.get('/allexpenses',auth.authenticate,homeController.getExpenses );
 module.exports = router;

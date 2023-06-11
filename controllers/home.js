@@ -147,3 +147,19 @@ exports.downloadexpense = async(req,res,next)=>{
 
     }
 }
+exports.getExpenses = async (req, res) => {
+    try {
+        const totalCount = await UserServices.countExpenses(req.user);
+        const { page, rows } = req.query;
+        const offset = (page - 1) * rows;
+        const limit = parseInt(rows);
+        const where = { offset, limit };
+        console.log(req.user) // Add any additional filters or conditions for getting expenses
+        const expenses = await UserServices.getExpenses(req.user.userid, where);
+        //const expenses = await UserServices.getExpenses({ offset, limit });
+        res.status(200).json({ expenses, totalCount });
+    } catch (error) {
+        res.status(500).json({ message: 'Something went wrong!', error: error });
+        console.log(error);
+    }
+};

@@ -69,6 +69,19 @@
     </div>
     <div class="container p-2 w-100">
         <ul class="list-group" id="expenses"></ul>
+        <div id="pagination" class="pagination">
+            <label for="rows">Rows per page :</label>
+            <select id="rows-per-page"name="rows" onchange="showChangedRows()">
+                <option value="5">5</option>
+                <option value="10" >10</option>
+                <option value="15">15</option>
+                <option value="20">20</option>
+                <option value="25">25</option>
+            </select>
+            <label id="page-details">Showing 1-5 of 11</label>
+            <button id="prev-btn" onclick="showPreviousPage()">prev</button>
+            <button id="next-btn" onclick="showNextPage()">next</button>
+        </div>
         <div id="leaderboard">
             <h1>leaderboard</h1>
             <ul id="leaderboardlist">
@@ -95,15 +108,7 @@
                     </div>
                     
                 </table>
-                <div id="pagination"></div>
-                <div class="all">
-                    <ul id="list"></ul>
-                </div>
-                <div id="page-nav">
-                    <button id="prev-btn" disabled>Previous</button>
-                    <span id="page-info"></span>
-                    <button id="next-btn" disabled>Next</button>
-                </div>
+                
             </div>
             
             <button class="btn btn-lg w-100 btn-outline-primary" onclick="download()">Download report</button>

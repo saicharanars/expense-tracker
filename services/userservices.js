@@ -1,10 +1,10 @@
 const ExpenseUsers = require("../models/expense");
 
 const getExpenses = async(req,where)=>{
-    console.log(req.user);
+    console.log(req);
     expenses = await ExpenseUsers.findAll({
         where: {
-          expenseuserid:req.user.userid
+          expenseuserid:req
         },
       });
     console.log(expenses);
@@ -12,8 +12,14 @@ const getExpenses = async(req,where)=>{
     //return req.user.getExpenses(where);
 }
 
+const countExpenses =async(user,where)=>{
+ const count = await ExpenseUsers.count(where);
+ return count;
+}
+
 
 
 module.exports={
- getExpenses
+ getExpenses,
+ countExpenses
 }
