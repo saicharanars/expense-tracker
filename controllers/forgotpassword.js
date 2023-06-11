@@ -1,3 +1,4 @@
+require("dotenv").config();
 const uuid = require("uuid");
 const User = require("../models/users");
 const Forgotpassword = require("../models/forgotpassword");
@@ -19,8 +20,7 @@ exports.forgotpassword = async (req, res, next) => {
       var defaultClient = SibApiV3Sdk.ApiClient.instance;
 
       var apiKey = defaultClient.authentications["api-key"];
-      apiKey.apiKey =
-        "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";
+      apiKey.apiKey =process.env.SEND_IN_BLUE;
       var apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 
       var sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail(); // SendSmtpEmail | Values to send a transactional email

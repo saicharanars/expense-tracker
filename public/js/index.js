@@ -94,7 +94,7 @@ function showLeaderboard() {
 //     console.log(error);
 //   }
 // });
-document.addEventListener('DOMContentLoaded', getExpenses); 
+//document.addEventListener('DOMContentLoaded', getExpenses); 
 function showexpenseonscreen(obj) {
   
 
@@ -192,6 +192,7 @@ async function getExpenses() {
      console.log(error);
   }
   }  
+getExpenses();
   async function showChangedRows() {
     try {
       rowsPerPage = event.target.value;

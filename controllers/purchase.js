@@ -1,8 +1,9 @@
+require("dotenv").config();
 const Razorpay = require("razorpay");
 const Order = require("../models/orders");
 const User = require("../models/users");
 const PremiumUser = require("../models/premiumuser");
-var jwt = require('jsonwebtoken');
+var jwt = require("jsonwebtoken");
 exports.premium = async (req, res, next) => {
   // const rzp = new Razorpay({
   //     key_id: 'rzp_test_0vMGyXdywrzGmu',
@@ -25,8 +26,8 @@ exports.premium = async (req, res, next) => {
   // });
   try {
     var instance = new Razorpay({
-      key_id: "rzp_test_0vMGyXdywrzGmu",
-      key_secret: "SiqSj5HJZY5R5Iprki6Ha6x6",
+      key_id: process.env.RAZORPAY_KEY_ID,
+      key_secret: process.env.RAZORPAY_KEY_SECRET
     });
 
     let order = await instance.orders.create({
@@ -88,7 +89,10 @@ exports.transactionstatus = async (req, res, next) => {
           return res.status(200).json({
             success: true,
             msg: "Transaction Successful",
-            token:jwt.sign({useremail:req.user.email,userid:userId,premium:true},'hgtyf1f51ge5ef555sb1f5')
+            token: jwt.sign(
+              { useremail: req.user.email, userid: userId, premium: true },
+              "hgtyf1f51ge5ef555sb1f5"
+            ),
           });
         } else {
           return res

@@ -1,5 +1,7 @@
 const path = require("path");
-
+const fs=require("fs");
+const helmet=require("helmet");
+const morgan=require("morgan");
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
@@ -13,6 +15,9 @@ app.use(homeRoutes);
 const userRoutes=require("./routes/userRoutes");
 app.use(userRoutes);
 app.use(express.static(path.join(__dirname, "public")));
+app.use(helmet());
+const logStream=fs.createWriteStream(path.join(__dirname,'access.log'),{flags:'a'})
+app.use(morgan('combined'),logStream)
 var cors = require("cors");
 app.use(cors());
 const User=require("./models/users")
@@ -35,7 +40,7 @@ User.hasMany(Forgotpassword);
 
 Forgotpassword.belongsTo(User);
 User.hasMany(DownloadedFile);
-DownloadedFile.belongsTo(DownloadedFile);
+DownloadedFile.belongsTo(User);
 
 
 
@@ -49,7 +54,7 @@ sequelize
   .sync()
   .then((result) => {
     // console.log(result);
-    app.listen(3000);
+    app.listen();
   })
   .catch((err) => {
     //console.log(err);
