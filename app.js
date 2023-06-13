@@ -5,31 +5,31 @@ const morgan=require("morgan");
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
-app.use(bodyParser.json({ extended: false }));
 const Sequelize = require("./util/database");
 const { sequelize } = require('./models/expense');
-//app.use(express.json());
 const homeRoutes = require("./routes/homeRoutes");
-//app.use(homeRoutes);
-app.use(homeRoutes);
 const userRoutes=require("./routes/userRoutes");
-app.use(userRoutes);
-app.use(express.static(path.join(__dirname, "public")));
-app.use(helmet());
 const logStream=fs.createWriteStream(path.join(__dirname,'access.log'),{flags:'a'})
-//app.use(morgan('combined',{ stream: logStream }))
-var cors = require("cors");
-app.use(cors());
 const User=require("./models/users")
 const Expense =require("./models/expense")
 const Order=require("./models/orders");
 const purchaseRoutes=require("./routes/purchase");
-app.use("/purchase/",purchaseRoutes);
 const errorController = require("./controllers/errorcontroller");
 const Premium= require("./models/premiumuser");
 const forgetPasswordRoutes = require('./routes/forgotpassword');
 const Forgotpassword = require('./models/forgotpassword');
-const DownloadedFile=require('./models/download')
+const DownloadedFile=require('./models/download');
+var cors = require("cors");
+app.use(cors());
+app.use(helmet());
+
+app.use(bodyParser.json({ extended: false }));
+app.use(morgan('combined',{ stream: logStream }))
+
+app.use(express.static(path.join(__dirname, "public")));
+app.use(homeRoutes);
+app.use(userRoutes);
+app.use("/purchase/",purchaseRoutes);
 app.use('/password',forgetPasswordRoutes);
 User.hasMany(Expense, { as: 'expenses' });
 Expense.belongsTo(User);
