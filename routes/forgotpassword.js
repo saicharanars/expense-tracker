@@ -2,7 +2,7 @@
 const express = require('express');
 
 const forgotpasswordController = require('../controllers/forgotpassword');
-const {authenticate} =require('../middleware/auth')
+const Auth =require('../middleware/auth')
 
 const router = express.Router();
 

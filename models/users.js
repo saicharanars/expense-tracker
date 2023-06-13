@@ -2,6 +2,13 @@ const Sequelize = require("sequelize");
 const sequelize = require("../util/database");
 const Expense =require("./expense")
 const { Model } = require('sequelize');
+// Import the Order model.
+const Order = require("../models/orders");
+
+// Define the User class.
+
+
+// Export the User class.
 
 
 const Expenseusers = sequelize.define("expenseusers", {

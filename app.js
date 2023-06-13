@@ -17,7 +17,7 @@ app.use(userRoutes);
 app.use(express.static(path.join(__dirname, "public")));
 app.use(helmet());
 const logStream=fs.createWriteStream(path.join(__dirname,'access.log'),{flags:'a'})
-app.use(morgan('combined'),logStream)
+//app.use(morgan('combined',{ stream: logStream }))
 var cors = require("cors");
 app.use(cors());
 const User=require("./models/users")
@@ -31,7 +31,7 @@ const forgetPasswordRoutes = require('./routes/forgotpassword');
 const Forgotpassword = require('./models/forgotpassword');
 const DownloadedFile=require('./models/download')
 app.use('/password',forgetPasswordRoutes);
-User.hasMany(Expense);
+User.hasMany(Expense, { as: 'expenses' });
 Expense.belongsTo(User);
 User.hasMany(Order);
 Order.belongsTo(User);
@@ -54,10 +54,10 @@ sequelize
   .sync()
   .then((result) => {
     // console.log(result);
-    app.listen();
+    app.listen(3000);
   })
   .catch((err) => {
     //console.log(err);
   });
 
-app.listen(4000);
+  app.listen(4000);

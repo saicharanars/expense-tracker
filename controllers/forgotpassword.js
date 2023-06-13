@@ -11,6 +11,7 @@ var SibApiV3Sdk = require("sib-api-v3-sdk");
 exports.forgotpassword = async (req, res, next) => {
   try {
     const { email } = req.body;
+    console.log(email)
     const user = await User.findOne({ where: { email } });
     if (user) {
       const id = uuid.v4();

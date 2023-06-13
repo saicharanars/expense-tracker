@@ -31,95 +31,96 @@
 
         </div>
 
-        <div class="container w-25 float-start  p-2">
-            <form onsubmit="expense(event)">
-                <div class=" container   align-items-start p-2">
-                    <div class=" container  p-2 align-middle ">
-                        <label for="exampleFormControlInput1" class="form-label">Expense Amount</label>
-                        <input class="form-control form-control-lg" type="text" name="amount" id="amount"
-                            placeholder="amount" />
+
+    </div>
+    <div class="row flex-row p-4">
+        <div class="col-sm-4 p-1">
+            <div class="container w-100   p-2">
+                <form onsubmit="expense(event)">
+                    <div class=" container   align-items-start p-2">
+                        <div class=" container  p-2 align-middle ">
+                            <label for="exampleFormControlInput1" class="form-label">Expense Amount</label>
+                            <input class="form-control form-control-lg" type="text" name="amount" id="amount"
+                                placeholder="amount" />
+                        </div>
+                        <div class=" container p-2 align-middle">
+                            <label>Category</label>
+                            <select class="form-select form-select-lg" aria-label="Default select example"
+                                name="category" id="cat">
+                                <option selected value="grocery">grocery</option>
+                                <option value="entertainment">entertainment</option>
+                                <option value="maintenance">maintenance</option>
+                            </select>
+                        </div>
+                        <div class=" container p-2 align-middle">
+                            <label>Expense Type</label>
+                            <select class="form-select-lg form-select" aria-label="Default select example name=" type"
+                                id="etype">
+                                <option selected value="rice">rice</option>
+                                <option value="movie">movie</option>
+                                <option value="electric bill">electricity bill</option>
+                            </select>
+                        </div>
+                        <div class=" container p-2 align-middle ">
+                            <!-- <button  type="button"class="btn-lg btn-primary">SUBMIT</button> -->
+                            <button class="btn btn-lg w-100 btn-outline-primary" type="submit">submit</button>
+                        </div>
                     </div>
-                    <div class=" container p-2 align-middle">
-                        <label>Category</label>
-                        <select class="form-select form-select-lg" aria-label="Default select example" name="category"
-                            id="cat">
-                            <option selected value="grocery">grocery</option>
-                            <option value="entertainment">entertainment</option>
-                            <option value="maintenance">maintenance</option>
-                        </select>
-                    </div>
-                    <div class=" container p-2 align-middle">
-                        <label>Expense Type</label>
-                        <select class="form-select-lg form-select" aria-label="Default select example name=" type"
-                            id="etype">
-                            <option selected value="rice">rice</option>
-                            <option value="movie">movie</option>
-                            <option value="electric bill">electricity bill</option>
-                        </select>
-                    </div>
-                    <div class=" container p-2 align-middle ">
-                        <!-- <button  type="button"class="btn-lg btn-primary">SUBMIT</button> -->
-                        <button class="btn btn-lg w-100 btn-outline-primary" type="submit">submit</button>
-                    </div>
+
+
+                </form>
+            </div>
+        </div>
+        <div class="col-sm-8 p-1">
+            <div class="container p-2 w-100">
+                <div class="d-flex w-100 justify-content-between">
+                    <h3>Amount</h3>
+                    <h3>Category</h3>
+                    <h3>Expense</h3>
+                    <h3>Delete</h3>
                 </div>
-
-
-            </form>
+                <ul class="list-group" id="expenses"></ul>
+                <div id="pagination" class="w-100">
+                    <label for="rows">Rows per page :</label>
+                    <select id="rows-per-page" name="rows" onchange="showChangedRows()">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                        <option value="20">20</option>
+                        <option value="25">25</option>
+                    </select>
+                    <label id="page-details">Showing 1-5 of 11</label>
+                    <button id="prev-btn" class="btn w-100 btn-outline-primary" onclick="showPreviousPage()">prev</button>
+                    <button id="next-btn" clas="btn w-100 btn-outline-primary" onclick="showNextPage()">next</button>
+                </div>
+                
+            </div>
         </div>
     </div>
-    <div class="container p-2 w-100">
-        <ul class="list-group" id="expenses"></ul>
-        <div id="pagination" class="pagination">
-            <label for="rows">Rows per page :</label>
-            <select id="rows-per-page"name="rows" onchange="showChangedRows()">
-                <option value="5">5</option>
-                <option value="10" >10</option>
-                <option value="15">15</option>
-                <option value="20">20</option>
-                <option value="25">25</option>
-            </select>
-            <label id="page-details">Showing 1-5 of 11</label>
-            <button id="prev-btn" onclick="showPreviousPage()">prev</button>
-            <button id="next-btn" onclick="showNextPage()">next</button>
-        </div>
-        <div id="leaderboard">
-            <h1>leaderboard</h1>
-            <ul id="leaderboardlist">
+    <div class="row w-100 flex-row p-4">
+        <div class="col-sm-4 p-1">
+            <div id="leaderboard">
+                <h1>leaderboard</h1>
+                <ul id="leaderboardlist">
 
-            </ul>
-        </div>
-        <div>
-            <h1>monthly report</h1>
-            <div>
-                <table class="table" id="tablebody">
-                    <thead>
-                        <tr>
-                            <th scope="col">Date</th>
-                            <th scope="col">Description</th>
-                            <th scope="col">category</th>
-                            <th scope="col">Expense</th>
-                        </tr>
-                    </thead>
-                    <div >
-                        <tbody >
-
-
-                        </tbody>
-                    </div>
-                    
-                </table>
+                </ul>
                 
             </div>
             
-            <button class="btn btn-lg w-100 btn-outline-primary" onclick="download()">Download report</button>
+            
+        </div>
+        <div class="col-sm-8 p-1">
+            <div>
+                <button class="btn btn-lg w-100 btn-outline-primary" onclick="download()">Download report</button>
+            </div>
+            <div id="download-list"></div>
         </div>
     </div>
 
 
+
     </div>
-    <div>
-        <div id="download-list"></div>
-    </div>
+    
 
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 

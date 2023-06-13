@@ -1,7 +1,9 @@
 var api = "http://localhost:4000";
 //1
 let currentPage = 1;
-let rowsPerPage = localStorage.getItem('rowsPerPage')?localStorage.getItem('rowsPerPage'):5;
+let rowsPerPage = localStorage.getItem("rowsPerPage")
+  ? localStorage.getItem("rowsPerPage")
+  : 5;
 
 async function expense(event) {
   event.preventDefault();
@@ -94,15 +96,25 @@ function showLeaderboard() {
 //     console.log(error);
 //   }
 // });
-//document.addEventListener('DOMContentLoaded', getExpenses); 
+//document.addEventListener('DOMContentLoaded', getExpenses);
 function showexpenseonscreen(obj) {
-  
-
   const childele = document.createElement("li");
   childele.className = "list-group-item";
-  childele.textContent =
-    obj.expenseamount + "   " + obj.category + "   " + obj.expensetype;
-
+  const box = document.createElement("div");
+  box.className="d-flex w-100 justify-content-between";
+  const amount=document.createElement("p")
+  amount.textContent=obj.expenseamount;
+  const category=document.createElement("p")
+  category.textContent=obj.category
+  const expensetype=document.createElement("p")
+  expensetype.textContent=obj.expensetype
+  box.appendChild(amount);
+  box.appendChild(category);
+  box.appendChild(expensetype);
+  
+//   childele.textContent =
+//     obj.expenseamount + "   " + obj.category + "   " + obj.expensetype;
+    childele.appendChild(box);
   const deletebtn = document.createElement("input");
   deletebtn.type = "button";
   deletebtn.value = "Delete";
@@ -124,8 +136,7 @@ function showexpenseonscreen(obj) {
         headers: { Authorization: token },
       });
       console.log(res);
-      expense.removeChild(childele)
-      
+      expense.removeChild(childele);
     } catch (error) {
       console.log(error);
     }
@@ -134,94 +145,119 @@ function showexpenseonscreen(obj) {
     //parentele.removeChild(childele);
   };
 
-  childele.appendChild(deletebtn);
+  box.appendChild(deletebtn);
   const expense = document.getElementById("expenses");
   //childele.appendChild(editbtn);
   expense.appendChild(childele);
   //parentele.appendChild(childele);
-  
-};
+}
 
 async function pagination(totalCount) {
   try {
     const maxPages = Math.ceil(totalCount / rowsPerPage);
-    document.getElementById('prev-btn').style.display = currentPage > 1 ? "block" : "none";
-    document.getElementById('next-btn').style.display = maxPages > currentPage ? "block" : "none";
-    document.getElementById('rows-per-page').value = rowsPerPage;
+    document.getElementById("prev-btn").style.display =
+      currentPage > 1 ? "block" : "none";
+    document.getElementById("next-btn").style.display =
+      maxPages > currentPage ? "block" : "none";
+    document.getElementById("rows-per-page").value = rowsPerPage;
     const start = (currentPage - 1) * rowsPerPage + 1;
     const temp = start + Number(rowsPerPage) - 1;
     const end = temp < totalCount ? temp : totalCount;
-    document.getElementById('page-details').textContent = `Showing ${start}-${end} of ${totalCount}`;
+    document.getElementById(
+      "page-details"
+    ).textContent = `Showing ${start}-${end} of ${totalCount}`;
   } catch (error) {
     console.error(error);
   }
-  
-  document.getElementById('prev-btn').onclick = function() {
+
+  document.getElementById("prev-btn").onclick = function () {
     showPreviousPage(totalCount);
   };
-  
-  document.getElementById('next-btn').onclick = function() {
+
+  document.getElementById("next-btn").onclick = function () {
     showNextPage(totalCount);
   };
 }
 
 async function getExpenses() {
-    // fetch data from server here and update the UI
+  // fetch data from server here and update the UI
+  document.getElementById("expenses").innerHTML = "";
+  try {
+    const token = localStorage.getItem("token");
+    const decodedToken = parseJwt(token);
+    const ispremiumuser = decodedToken.ispremiumuser;
+    if (ispremiumuser) {
+      showPremiumuserMessage();
+      showLeaderboard();
+      showDownloadButtons();
+    }
+    const response = await axios.get(
+      `http://localhost:3000/allexpenses?page=${currentPage}&rows=${rowsPerPage}`,
+      { headers: { Authorization: token } }
+    );
+    console.log(response);
+
     document.getElementById("expenses").innerHTML = "";
-    try{
-      const token = localStorage.getItem('token');
-      const decodedToken = parseJwt(token);
-      const ispremiumuser = decodedToken.ispremiumuser;
-      if(ispremiumuser){
-          showPremiumuserMessage();
-          showLeaderboard();
-          showDownloadButtons();
-      };
-      const response = await axios.get(`http://localhost:3000/allexpenses?page=${currentPage}&rows=${rowsPerPage}`, { headers: {'Authorization': token}})
-     document.getElementById('expenses').innerHTML = "";
-     const { expenses, totalCount } = response.data;
-     pagination(totalCount);
-     if (expenses.length > 0) {
-         for (let i = 0; i < expenses.length; i++) {
-          showexpenseonscreen(response.data.expenses[i]);
-         }
-     } else {
-         document.getElementById('err').textContent = "Currently there are no Expenses!"
-     }
+    const { expenses, totalCount } = response.data;
+    console.log(totalCount);
+    pagination(totalCount);
+    if (expenses.length > 0) {
+      for (let i = 0; i < expenses.length; i++) {
+        showexpenseonscreen(response.data.expenses[i]);
+      }
+    } else {
+      document.getElementById("err").textContent =
+        "Currently there are no Expenses!";
+    }
   } catch (error) {
-     console.log(error);
+    console.log(error);
   }
-  }  
-getExpenses();
-  async function showChangedRows() {
-    try {
-      rowsPerPage = event.target.value;
-      localStorage.setItem('rowsPerPage', rowsPerPage);
-      location.reload();
-    } catch (error) {
-      console.error(error);
-    }
+}
+document.addEventListener("DOMContentLoaded", async () => {
+  const token = localStorage.getItem("token");
+  const decodeToken = parseJwt(token);
+  const premiumUser = decodeToken.premium;
+  userid = decodeToken.userid;
+  console.log(decodeToken);
+  if (premiumUser) {
+    document.getElementById("rzp-button1").style.visibility = "hidden";
+    document.getElementById("premiummessage").innerHTML =
+      "you are premium user";
+    document.getElementById("leaderboard").style.visibility = "show";
+    showLeaderboard();
   }
+  getExpenses();
   
-  async function showPreviousPage(totalCount) {
-    try {
-      currentPage--;
-      await getExpenses();
-      pagination(totalCount); // call pagination function after fetching data
-    } catch (error) {
-      console.error(error);
-    }
+});
+async function showChangedRows() {
+  try {
+    rowsPerPage = event.target.value;
+    localStorage.setItem("rowsPerPage", rowsPerPage);
+    location.reload();
+  } catch (error) {
+    console.error(error);
   }
-  
-  async function showNextPage(totalCount) {
-    try {
-      currentPage++;
-      await getExpenses();
-      pagination(totalCount); // call pagination function after fetching data
-    } catch (error) {
-      console.error(error);
-    }
+}
+
+async function showPreviousPage(totalCount) {
+  try {
+    currentPage--;
+    await getExpenses();
+    pagination(totalCount); // call pagination function after fetching data
+  } catch (error) {
+    console.error(error);
   }
+}
+
+async function showNextPage(totalCount) {
+  try {
+    currentPage++;
+    await getExpenses();
+    pagination(totalCount); // call pagination function after fetching data
+  } catch (error) {
+    console.error(error);
+  }
+}
 function showtableonscreen(obj) {
   const table = document.getElementById("tablebody");
   const tr = document.createElement("tr");
@@ -244,7 +280,6 @@ function showtableonscreen(obj) {
 
   table.appendChild(tr);
 }
-
 
 document.getElementById("rzp-button1").onclick = async function (e) {
   const token = localStorage.getItem("token");

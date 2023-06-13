@@ -19,7 +19,7 @@ exports.postExpense = async (req, res, next) => {
     const expensetype = req.body.expensetype;
 
     const userId = req.user.userid;
-    console.log(userId);
+   
     const data = await Expense.create({
       expenseamount: expenseamount,
       category: category,
@@ -28,7 +28,7 @@ exports.postExpense = async (req, res, next) => {
       
     },{transaction: t});
     //const totalExpense = Number(req.user.totalExpenses) + Number(expenseamount);
-    console.log(req.user);
+    console.log(req.user,"req.user");
   
     const userupdte = await User.update(
       {
@@ -120,8 +120,9 @@ exports.getUserLeaderBoard = async (req, res, next) => {
 };
 exports.downloadexpense = async(req,res,next)=>{
     try{
-        const expenses =await UserServices.getExpenses(req);
-        //console.log("expenses",expenses)
+        console.log(req)
+        const expenses =await UserServices.getExpenses(req.user.userid);
+        console.log("expenses",expenses)
         const stringifiedExpenses = JSON.stringify(expenses);
         //console.log(stringifiedExpenses);
         // based on userId
@@ -150,13 +151,15 @@ exports.downloadexpense = async(req,res,next)=>{
 exports.getExpenses = async (req, res) => {
     try {
         const totalCount = await UserServices.countExpenses(req.user);
+        console.log(totalCount)
         const { page, rows } = req.query;
         const offset = (page - 1) * rows;
         const limit = parseInt(rows);
         const where = { offset, limit };
-        console.log(req.user) // Add any additional filters or conditions for getting expenses
+        console.log(req.user,where)
+         // Add any additional filters or conditions for getting expenses
         const expenses = await UserServices.getExpenses(req.user.userid, where);
-        //const expenses = await UserServices.getExpenses({ offset, limit });
+        //console.log(expenses);//const expenses = await UserSeruvices.getExpenses({ offset, limit });
         res.status(200).json({ expenses, totalCount });
     } catch (error) {
         res.status(500).json({ message: 'Something went wrong!', error: error });
