@@ -51,7 +51,7 @@ DownloadedFile.belongsTo(User);
 app.use(errorController.get404);
 
 sequelize
-  .sync()
+  .sync({force:true})
   .then((result) => {
     // console.log(result);
     app.listen(3000);
