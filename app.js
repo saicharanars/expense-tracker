@@ -24,7 +24,7 @@ app.use(cors());
 app.use(helmet());
 
 app.use(bodyParser.json({ extended: false }));
-//app.use(morgan('combined',{ stream: logStream }))
+app.use(morgan('combined',{ stream: logStream }))
 
 app.use(express.static(path.join(__dirname, "public")));
 app.use(homeRoutes);
