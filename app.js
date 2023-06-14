@@ -9,7 +9,7 @@ const Sequelize = require("./util/database");
 const { sequelize } = require('./models/expense');
 const homeRoutes = require("./routes/homeRoutes");
 const userRoutes=require("./routes/userRoutes");
-const logStream=fs.createWriteStream(path.join(__dirname,'access.log'),{flags:'a'})
+//const logStream=fs.createWriteStream(path.join(__dirname,'access.log'),{flags:'a'})
 const User=require("./models/users")
 const Expense =require("./models/expense")
 const Order=require("./models/orders");
@@ -24,7 +24,7 @@ app.use(cors());
 app.use(helmet());
 
 app.use(bodyParser.json({ extended: false }));
-app.use(morgan('combined',{ stream: logStream }))
+//app.use(morgan('combined',{ stream: logStream }))
 
 app.use(express.static(path.join(__dirname, "public")));
 app.use(homeRoutes);
