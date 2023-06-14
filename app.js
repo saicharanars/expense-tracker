@@ -22,7 +22,7 @@ const DownloadedFile=require('./models/download');
 var cors = require("cors");
 app.use(cors());
 app.use(helmet({
-    contentSecurityPolicy: { directives: cspDefaults }
+    contentSecurityPolicy: false
 }));
 
 app.use(bodyParser.json({ extended: false }));
