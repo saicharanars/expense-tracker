@@ -17,7 +17,7 @@ app.use(userRoutes);
 app.use(express.static(path.join(__dirname, "public")));
 app.use(helmet());
 const logStream=fs.createWriteStream(path.join(__dirname,'access.log'),{flags:'a'})
-app.use(morgan('combined'),logStream)
+app.use(morgan('combined',{ stream: logStream }));
 var cors = require("cors");
 app.use(cors());
 const User=require("./models/users")
