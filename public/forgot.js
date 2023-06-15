@@ -10,7 +10,7 @@ async function forgotpassword(e) {
     console.log(userDetails);
  
     const response = await axios.post(
-      "http://35.154.22.231:4000/password/forgotpassword",
+      "http://3.109.101.125:4000/password/forgotpassword",
       userDetails
     );
     console.log(response);
