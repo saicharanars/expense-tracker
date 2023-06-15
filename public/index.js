@@ -1,4 +1,4 @@
-var api = "http://localhost:4000";
+var api = "http://35.154.22.231:4000";
 //1
 let currentPage = 1;
 let rowsPerPage = localStorage.getItem("rowsPerPage")
@@ -55,7 +55,7 @@ function showLeaderboard() {
   inputElement.onclick = async () => {
     const token = localStorage.getItem("token");
     const userLeaderBoardArray = await axios.get(
-      "http://localhost:3000/showLeaderBoard",
+      `${api}/showLeaderBoard`,
       { headers: { Authorization: token } }
     );
     console.log(userLeaderBoardArray);
@@ -192,7 +192,7 @@ async function getExpenses() {
       showDownloadButtons();
     }
     const response = await axios.get(
-      `http://localhost:3000/allexpenses?page=${currentPage}&rows=${rowsPerPage}`,
+      `${api}/allexpenses?page=${currentPage}&rows=${rowsPerPage}`,
       { headers: { Authorization: token } }
     );
     console.log(response);
@@ -339,7 +339,7 @@ document.getElementById("rzp-button1").onclick = async function (e) {
 async function downloadFileList() {
   try {
     const token = localStorage.getItem("token");
-    const response = await axios.get("http://localhost:3000/download", {
+    const response = await axios.get(`${api}/download`, {
       headers: { Authorization: token },
     });
     if (response.status === 200) {
@@ -364,7 +364,7 @@ async function downloadFileList() {
 async function download() {
   try {
     const token = localStorage.getItem("token");
-    const response = await axios.get("http://localhost:3000/download", {
+    const response = await axios.get(`${api}/download`, {
       headers: { Authorization: token },
     });
     if (response.status === 200) {
@@ -380,7 +380,9 @@ async function download() {
     } else {
       throw new Error(response.data.message);
     }
-  } catch (err) {
+  } 
+  catch (err) {
     window.alert(err);
   }
 }
+  
