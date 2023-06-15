@@ -1,4 +1,4 @@
-var api = "http://35.154.22.231:4000/";
+var api = "http://35.154.22.231:4000";
 
 
 async function user(event) {
