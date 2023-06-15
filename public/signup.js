@@ -12,7 +12,7 @@ async function user(event) {
     password
   };
   try {
-    const res = await axios.post(`${api}signup`, obj);
+    const res = await axios.post(`${api}/signup`, obj);
     console.log(res.data);
     window.location.href = "/loginhtml";
     //showexpenseonscreen(res.data.expenses);

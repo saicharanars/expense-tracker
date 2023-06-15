@@ -10,7 +10,7 @@ async function userlogin(event) {
     password,
   };
   try {
-    const resp = await axios.post(`${api}login`, obj);
+    const resp = await axios.post(`${api}/login`, obj);
     console.log(resp.data);
 
     if (resp.data.login) {
