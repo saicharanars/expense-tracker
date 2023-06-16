@@ -4,8 +4,8 @@ const User = require("../models/users");
 
 exports.authenticate = async (req, res, next) => {
   const token = req.headers.authorization;
-  var user = jwt.verify(token, "hgtyf1f51ge5ef555sb1f5");
-  //console.log(user);
+  var user = jwt.verify(token, 'hgtyf1f51ge5ef555sb1f5');
+  console.log(user);
   const project = await User.findOne({ where: { id: user.userid } });
   if (project === null) {
     console.log("Not found!");
