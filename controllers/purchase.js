@@ -19,7 +19,7 @@ exports.premium = async (req, res, next) => {
   .then((order) => {
       rzpOrder = order;
       console.log(req.user.userid)
-      return Order.create({orderId: rzpOrder.id, status: 'PENDING',expenseuserid:req.user.userid});
+      return Order.create({orderid: rzpOrder.id, status: 'PENDING',expenseuserid:req.user.userid});
   })
   .then((order) => {
       res.status(201).json({order: rzpOrder, key_id: rzp.key_id});
