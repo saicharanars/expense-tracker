@@ -16,7 +16,7 @@ const { options } = require("../routes/homeRoutes");
 //     //return req.user.getExpenses(where);
 // }
 const getExpenses = async (req, { offset = null, limit = null } = {}) => {
-    console.log(req.userid);
+    console.log(req.user.id);
     console.log(offset, limit, "null");
     console.log(req, { offset, limit });
   
@@ -40,7 +40,7 @@ const getExpenses = async (req, { offset = null, limit = null } = {}) => {
 
 const countExpenses =async(user,where)=>{
 console.log(user)
- const count = await ExpenseUsers.count({where:{expenseuserid:user.userid}});
+ const count = await ExpenseUsers.count({where:{expenseuserid:user.id}});
  //const countuser= await user.countExpense(where);
  console.log(count)
  return count;

@@ -121,12 +121,12 @@ exports.getUserLeaderBoard = async (req, res, next) => {
 exports.downloadexpense = async(req,res,next)=>{
     try{
         console.log(req)
-        const expenses =await UserServices.getExpenses(req.user.userid);
+        const expenses =await UserServices.getExpenses(req.user.id);
         console.log("expenses",expenses)
         const stringifiedExpenses = JSON.stringify(expenses);
         //console.log(stringifiedExpenses);
         // based on userId
-        const userId = req.user.userid;
+        const userId = req.user.id;
         console.log(req.user,"user");
         const fileName =`Expense${userId}/${new Date()}.txt`;
         const fileURL = await S3Service.uploadToS3(stringifiedExpenses, fileName);
@@ -136,7 +136,7 @@ exports.downloadexpense = async(req,res,next)=>{
           const downloadedFile = await DownloadedFile.create({
             fileName,
             downloadDate: new Date(),
-            userId: req.user.userid
+            userId: req.user.id
         });
         //console.log(fileURL,"url",fileName,"name",userId);
 
@@ -158,7 +158,7 @@ exports.getExpenses = async (req, res) => {
         const where = { offset, limit };
         console.log(req.user,where)
          // Add any additional filters or conditions for getting expenses
-        const expenses = await UserServices.getExpenses(req.user.userid, where);
+        const expenses = await UserServices.getExpenses(req.user.id, where);
         //console.log(expenses);//const expenses = await UserSeruvices.getExpenses({ offset, limit });
         res.status(200).json({ expenses, totalCount });
     } catch (error) {
