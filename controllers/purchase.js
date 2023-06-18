@@ -4,80 +4,57 @@ const Order = require("../models/orders");
 const User = require("../models/users");
 const PremiumUser = require("../models/premiumuser");
 var jwt = require("jsonwebtoken");
-
 exports.premium = async (req, res, next) => {
-  const rzp = new Razorpay({
-      key_id: process.env.RAZORPAY_KEY_ID,
-      key_secret: process.env.RAZORPAY_KEY_SECRET,
-  });
-  const amount = 250;
-  console.log(amount,Order.id,User);
-   //amount is in paise and not rupees
-   console.log(req.user.userid)
-  let rzpOrder;
-  rzp.orders.create({amount: amount, currency:'INR'})
-  .then((order) => {
-      rzpOrder = order;
-      console.log(req.user.userid)
-      return Order.create({orderid: rzpOrder.id, status: 'PENDING',expenseuserid:req.user.userid});
-  })
-  .then((order) => {
-      res.status(201).json({order: rzpOrder, key_id: rzp.key_id});
-      return;
-  })
-  .catch((err) => {console.log(err);
-      res.status(403).json({error: err, msg: 'something went wrong'});
-  });
-//   try {
-//     var instance = new Razorpay({
-//       key_id: process.env.RAZORPAY_KEY_ID,
-//       key_secret: process.env.RAZORPAY_KEY_SECRET,
-//     });
+  console.log(req.headers.authorization);
+  const user = await jwt.verify(
+    req.headers.authorization,
+    "hgtyf1f51ge5ef555sb1f5"
+  );
+  console.log(user);
+  console.log(req.user);
+  try {
+    var instance = new Razorpay({
+      key_id: "rzp_test_0vMGyXdywrzGmu",
+      key_secret: "SiqSj5HJZY5R5Iprki6Ha6x6",
+    });
 
-//     const order = await instance.orders.create({
-//       amount: 50000,
-//       currency: "INR",
-//     },(err,order)=>{
-//         if (err){
-//             console.log(err)
-//         }else{
-//             console.log(" iam order")
-//             console.log(order)
-//         }
-//     });
-//     console.log(order);
+    let order = await instance.orders.create({
+      amount: 50000,
+      currency: "INR",
+    });
+    console.log(user.userid);
+    const ordertable = await Order.create({
+      orderId: order.id,
+      status: "PENDING",
+      expenseuserid: user.userid,
+    });
+    console.log(ordertable, "order from order table");
 
-//     //console.log(req.user,order);
-//     // const ordertable = await Order.create({
-//     //   orderId: order.id,
-//     //   status: "PENDING",
-//     //   expenseuserid: req.user.userid,
-//     // });
-//     //console.log(ordertable);
-
-//     res.status(201).json({
-//       success: true,
-//       //order,
-//       key_id: instance.key_id,
-//       orderStatus: "pending",
-//       message: "order is created",
-//     });
-//   } catch (error) {
-//     console.log(error);
-//     res.status(500).json({ success: false, error: error });
-//   }
+    res.status(201).json({
+      success: true,
+      order,
+      orderStatus: "pending",
+      message: "order is created",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, error: error });
+  }
 };
 exports.transactionstatus = async (req, res, next) => {
-  const { payment_id, order_id, status } = req.body;
-  console.log(req.body);
-  const userId = req.user.userid;
+  const { status, order_id } = req.body;
+  console.log(req.body, "body >>>>>>>");
+  const userId = req.user.id;
+  console.log(order_id, "order_id", status, "status", userId, ">>>>>>");
   try {
-    const order = await Order.findOne({ where: { orderid: order_id } });
-    console.log(order)
+    const order = await Order.findOne({ where: { orderId: order_id } });
+
+    console.log(order.orderId, ">>>>>>>");
     const promise1 =
       status === "success"
         ? order.update({ status: "SUCCESSFUL" }) //payment successful
-        : order.update({ status: "FAILED" }); //payment failed
+        : order.update({ status: "FAILED" });
+    //await order.update({ status: "FAILED" },{where: {id: order.dataValues.id}}) //payment failed
     const promise2 =
       status === "success"
         ? await User.update(
