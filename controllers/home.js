@@ -18,7 +18,7 @@ exports.postExpense = async (req, res, next) => {
     const category = req.body.category;
     const expensetype = req.body.expensetype;
 
-    const userId = req.user.userid;
+    const userId = req.user.id;
    
     const data = await Expense.create({
       expenseamount: expenseamount,
@@ -68,7 +68,7 @@ exports.postDelete = async (req, res, next) => {
   let t;
   try {
     t = await sequelize.transaction();
-    const userId = req.user.userid;
+    const userId = req.user.id;
     console.log(userId);
 
     if (!req.params.id) {

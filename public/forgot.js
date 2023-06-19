@@ -10,12 +10,17 @@ async function forgotpassword(e) {
     console.log(userDetails);
  
     const response = await axios.post(
-      "http://3.109.101.125:4000/password/forgotpassword",
+      "http://localhost:4000/password/forgotpassword",
       userDetails
     );
     console.log(response);
-    if (response.status === 202) {
+    if (response.status === 201) {
       document.body.innerHTML += '<div style="color:red;">Mail Successfully sent <div>';
+      const link = document.createElement("a");
+      link.innerText="click here to reset your password reset ";
+      link.href=`http://localhost:4000/password/resetpassword/${response.passwordrequestid}`;
+      const forget = document.getElementById("reset");
+      forget.append(link);
     } else {
       throw new Error("Something went wrong!!!");
     }
