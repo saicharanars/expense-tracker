@@ -11,17 +11,18 @@ var SibApiV3Sdk = require("sib-api-v3-sdk");
 exports.forgotpassword = async (req, res, next) => {
   try {
     const { email } = req.body;
-    console.log(email)
+    console.log(email);
     const user = await User.findOne({ where: { email } });
     if (user) {
       const id = uuid.v4();
-      user.createForgotpassword({ id, active: true }).catch((err) => {
-        throw new Error(err);
+      const forgetpassword = await user.createForgotpassword({
+        id,
+        active: true,
       });
       var defaultClient = SibApiV3Sdk.ApiClient.instance;
 
       var apiKey = defaultClient.authentications["api-key"];
-      apiKey.apiKey =process.env.SEND_IN_BLUE;
+      apiKey.apiKey = process.env.SEND_IN_BLUE;
       var apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 
       var sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail(); // SendSmtpEmail | Values to send a transactional email
@@ -47,20 +48,19 @@ exports.forgotpassword = async (req, res, next) => {
         },
       };
       console.log("done");
-      apiInstance
-        .sendTransacEmail(sendSmtpEmail)
-        .then((response) => {
-          console.log("Link to reset password sent to your mail ");
-          console.log(response);
-          return res.status(201).json({
-            message: "Link to reset password sent to your mail ",
-            messageid: response.messageId,
-            success: true,
-          });
-        })
-        .catch((err) => {
-          console.log(err);
+      const instance = await apiInstance.sendTransacEmail(sendSmtpEmail);
+      if (instance) {
+        console.log("Link to reset password sent to your mail ");
+        console.log(instance);
+        return res.status(201).json({
+          message: "Link to reset password sent to your mail ",
+          messageid: response.messageId,
+          passwordrequestid: id,
+          success: true,
         });
+      } else {
+        console.log("reset passwaord not sent");
+      }
 
       //send mail
     } else {
@@ -102,46 +102,43 @@ exports.updatepassword = async (req, res, next) => {
   try {
     const { newpassword } = req.query;
     const { resetpasswordid } = req.params;
-    console.log(resetpasswordid+"  ",newpassword);
-        
-    
-    Forgotpassword.findOne({ where: { id: req.params.resetpasswordid } }).then(
-      (resetpasswordrequest) => {
-        console.log('forgot',resetpasswordrequest);
-        User.findOne({ where: { id: resetpasswordrequest.expenseuserId } }).then(
-          (user) => {
-            console.log('userDetails', user)
-            if (user) {
-              //encrypt the password
+    console.log(resetpasswordid + "  ", newpassword);
 
-              const saltRounds = 10;
-              bcrypt.genSalt(saltRounds, function (err, salt) {
-                if (err) {
-                  console.log(err);
-                  throw new Error(err);
-                }
-                bcrypt.hash(newpassword, salt, function (err, hash) {
-                  // Store hash in your password DB.
-                  if (err) {
-                    console.log(err);
-                    throw new Error(err);
-                  }
-                  user.update({ password: hash }).then(() => {
-                    res
-                      .status(201)
-                      .json({ message: "Successfuly update the new password" });
-                  });
-                });
-              });
-            } else {
-              return res
-                .status(404)
-                .json({ error: "No user Exists", success: false });
-            }
+    const resetpasswordrequest = await Forgotpassword.findOne({
+      where: { id: req.params.resetpasswordid },
+    });
+    if (resetpasswordrequest) {
+      console.log("forgot", resetpasswordrequest);
+      const user = User.findOne({
+        where: { id: resetpasswordrequest.expenseuserId },
+      });
+      if (user) {
+        console.log("userDetails", user);
+        const saltRounds = 10;
+        bcrypt.genSalt(saltRounds, function (err, salt) {
+          if (err) {
+            console.log(err);
+            throw new Error(err);
           }
-        );
+          bcrypt.hash(newpassword, salt, function (err, hash) {
+            // Store hash in your password DB.
+            if (err) {
+              console.log(err);
+              throw new Error(err);
+            }
+            user.update({ password: hash }).then(() => {
+              res
+                .status(201)
+                .json({ message: "Successfuly update the new password" });
+            });
+          });
+        });
+      } else {
+        return res
+          .status(404)
+          .json({ error: "No user Exists", success: false });
       }
-    );
+    }
   } catch (error) {
     return res.status(403).json({ error, success: false });
   }

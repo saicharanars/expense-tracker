@@ -1,4 +1,4 @@
-var api = "http://3.109.101.125:4000";
+var api ="http://3.109.101.125:4000";
 //1
 let currentPage = 1;
 let rowsPerPage = localStorage.getItem("rowsPerPage")
@@ -59,10 +59,25 @@ function showLeaderboard() {
       { headers: { Authorization: token } }
     );
     console.log(userLeaderBoardArray);
+    const lbbox = document.createElement("div");
+    lbbox.className = "d-flex w-100 justify-content-between";
+    const name = document.createElement("p");
+    
+    const totalexpenses = document.createElement("p");
+    lbbox.appendChild(name);
+    lbbox.appendChild(totalexpenses);
+    
+
     var leaderboardElem = document.getElementById("leaderboardlist");
-    leaderboardElem.innerHTML += "<h1> Leader Board</h1>";
+    leaderboardElem.className="list-group-item";
     userLeaderBoardArray.data.forEach((userDetails) => {
-      leaderboardElem.innerHTML += `<li>Name - ${userDetails.username} Total Expenses - ${userDetails.totalExpenses} `;
+      name.textContent=  ${userDetails.username}
+      totalexpenses.textContent=${userDetails.totalExpenses}
+      lbbox.appendChild(name);
+      lbbox.appendChild(totalexpenses);
+      leaderboardElem.appendChild(lbbox);
+      //leaderboardElem.innerHTML += `<li>Name - ${userDetails.username} Total Expenses - ${userDetails.totalExpenses} `;
+
     });
   };
   document.getElementById("leaderboardlist").appendChild(inputElement);
@@ -224,6 +239,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("premiummessage").innerHTML =
       "you are premium user";
     document.getElementById("leaderboard").style.visibility = "show";
+    document.getElementById("premiumdashboard").style.visibility="show";
     showLeaderboard();
   }
   getExpenses();
@@ -306,6 +322,7 @@ document.getElementById("rzp-button1").onclick = async function (e) {
             document.getElementById("rzp-button1").style.visibility = "hidden";
             document.getElementById("premiummessage").innerHTML =
               "you are premium user";
+            document.getElementById("premiumdashboard").style.visibility="show";
 
             localStorage.setItem("token", res1.data.token);
           } catch (err) {

@@ -1,3 +1,4 @@
+var api ="http://3.109.101.125:4000";
 async function forgotpassword(e) {
   try {
     e.preventDefault();
@@ -10,7 +11,7 @@ async function forgotpassword(e) {
     console.log(userDetails);
  
     const response = await axios.post(
-      "http://localhost:4000/password/forgotpassword",
+      `${api}/password/forgotpassword`,
       userDetails
     );
     console.log(response);
@@ -18,7 +19,7 @@ async function forgotpassword(e) {
       document.body.innerHTML += '<div style="color:red;">Mail Successfully sent <div>';
       const link = document.createElement("a");
       link.innerText="click here to reset your password reset ";
-      link.href=`http://localhost:4000/password/resetpassword/${response.passwordrequestid}`;
+      link.href=`${api}/password/resetpassword/${response.passwordrequestid}`;
       const forget = document.getElementById("reset");
       forget.append(link);
     } else {
