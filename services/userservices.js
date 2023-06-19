@@ -16,7 +16,7 @@ const { options } = require("../routes/homeRoutes");
 //     //return req.user.getExpenses(where);
 // }
 const getExpenses = async (req, { offset = null, limit = null } = {}) => {
-    console.log(req.user.id);
+    //console.log(req.user.id);
     console.log(offset, limit, "null");
     console.log(req, { offset, limit });
   
