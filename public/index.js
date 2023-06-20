@@ -59,25 +59,15 @@ function showLeaderboard() {
       { headers: { Authorization: token } }
     );
     console.log(userLeaderBoardArray);
-    const lbbox = document.createElement("div");
-    lbbox.className = "d-flex w-100 justify-content-between";
-    const name = document.createElement("p");
-    
-    const totalexpenses = document.createElement("p");
-    lbbox.appendChild(name);
-    lbbox.appendChild(totalexpenses);
-    
-
+    var leaderboardElem = document.getElementById("leaderboardlist");
+    leaderboardElem.innerHTML += "<h1> Leader Board</h1>";
+    leaderboardElem.className="list-group"
+    leaderboardElem.innerHTML=`<li class="list-group-item-heading d-flex justify-content-between align-items-center"><div>Username</div><div>Total Expenses</div></li>`;
     var leaderboardElem = document.getElementById("leaderboardlist");
     leaderboardElem.className="list-group-item";
     userLeaderBoardArray.data.forEach((userDetails) => {
-      name.textContent=  ${userDetails.username}
-      totalexpenses.textContent=${userDetails.totalExpenses}
-      lbbox.appendChild(name);
-      lbbox.appendChild(totalexpenses);
-      leaderboardElem.appendChild(lbbox);
-      //leaderboardElem.innerHTML += `<li>Name - ${userDetails.username} Total Expenses - ${userDetails.totalExpenses} `;
-
+      
+        leaderboardElem.innerHTML += `<li class="list-group-item d-flex justify-content-between align-items-center"><div>${userDetails.username}</div><div>₹ ${userDetails.totalExpenses}</div></li> `;
     });
   };
   document.getElementById("leaderboardlist").appendChild(inputElement);

@@ -54,7 +54,7 @@ exports.forgotpassword = async (req, res, next) => {
         console.log(instance);
         return res.status(201).json({
           message: "Link to reset password sent to your mail ",
-          messageid: response.messageId,
+          messageid: instance.messageId,
           passwordrequestid: id,
           success: true,
         });
@@ -114,29 +114,16 @@ exports.updatepassword = async (req, res, next) => {
       });
       if (user) {
         console.log("userDetails", user);
-        const saltRounds = 10;
-        bcrypt.genSalt(saltRounds, function (err, salt) {
-          if (err) {
-            console.log(err);
-            throw new Error(err);
-          }
-          bcrypt.hash(newpassword, salt, function (err, hash) {
-            // Store hash in your password DB.
-            if (err) {
-              console.log(err);
-              throw new Error(err);
+        const hashedPassword = await bcrypt.hash(newpassword, 10);
+        const update = await User.update({password:hashedPassword},{
+            where:{
+                id:user.id
             }
-            user.update({ password: hash }).then(() => {
-              res
-                .status(201)
-                .json({ message: "Successfuly update the new password" });
-            });
-          });
         });
+        res.status(201).json({ message: "Successfuly updated the new password" });
+        
       } else {
-        return res
-          .status(404)
-          .json({ error: "No user Exists", success: false });
+        return res.status(404).json({ error: "No user Exists", success: false });
       }
     }
   } catch (error) {
