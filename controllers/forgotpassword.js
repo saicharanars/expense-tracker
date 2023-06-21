@@ -88,7 +88,7 @@ exports.resetpassword = async (req, res, next) => {
                                             console.log('called')
                                         }
                                     </script>
-                                    <form action="/password/updatepassword/${id}" method="post">
+                                    <form action="/password/updatepassword/${id}" method="get">
                                         <label for="newpassword">Enter New password</label>
                                         <input name="newpassword" type="password" required></input>
                                         <button type="submit">reset password</button>
