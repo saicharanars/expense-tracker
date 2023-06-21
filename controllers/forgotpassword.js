@@ -109,7 +109,7 @@ exports.updatepassword = async (req, res, next) => {
     });
     if (resetpasswordrequest) {
       console.log("forgot", resetpasswordrequest);
-      const user = User.findOne({
+      const user = await User.findOne({
         where: { id: resetpasswordrequest.expenseuserId },
       });
       if (user) {
