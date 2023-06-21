@@ -19,7 +19,7 @@ async function forgotpassword(e) {
       document.body.innerHTML += '<div style="color:red;">Mail Successfully sent <div>';
       const link = document.createElement("a");
       link.innerText="click here to reset your password reset ";
-      link.href=`${api}/password/resetpassword/${response.passwordrequestid}`;
+      link.href=`${api}/password/resetpassword/${response.data.passwordrequestid}`;
       const forget = document.getElementById("reset");
       forget.append(link);
     } else {

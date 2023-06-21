@@ -229,7 +229,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("premiummessage").innerHTML =
       "you are premium user";
     document.getElementById("leaderboard").style.visibility = "show";
-    document.getElementById("premiumdashboard").style.visibility="show";
+    document.getElementById("premiumdashboard").className = "row w-100 flex-row p-4 text-center d-flex";
     showLeaderboard();
   }
   getExpenses();
