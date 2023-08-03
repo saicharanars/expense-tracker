@@ -4,9 +4,13 @@ const User = require("../models/users");
 exports.authenticate = async (req, res, next) => {
   const token = req.headers.authorization;
   const user = await jwt.verify(token, "hgtyf1f51ge5ef555sb1f5");
-  project = await User.findOne({ where: { id: user.userid } });
-  if (project.dataValues.id === user.userid) {
-    req.user = project.dataValues;
+  console.log(user)
+  const project = await User.findById(user.userid).exec();
+  console.log(project)
+  if (project) {
+    
+    req.user = project;
+    
     console.log(req.user, "user from auth js");
     next();
   } else {

@@ -1,4 +1,4 @@
-var api ="http://3.109.101.125:4000";
+var api ="http://localhost:4000";
 async function forgotpassword(e) {
   try {
     e.preventDefault();
@@ -15,7 +15,7 @@ async function forgotpassword(e) {
       userDetails
     );
     console.log(response);
-    if (response.status === 201) {
+    if (response.status === 200) {
       document.body.innerHTML += '<div style="color:red;">Mail Successfully sent <div>';
       const link = document.createElement("a");
       link.innerText="click here to reset your password reset ";

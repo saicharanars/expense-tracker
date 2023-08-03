@@ -1,4 +1,4 @@
-var api ="http://3.109.101.125:4000";
+var api ="http://localhost:4000";
 
 async function userlogin(event) {
   event.preventDefault();

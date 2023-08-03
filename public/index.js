@@ -1,4 +1,4 @@
-var api ="http://3.109.101.125:4000";
+var api ="http://localhost:4000";
 //1
 let currentPage = 1;
 let rowsPerPage = localStorage.getItem("rowsPerPage")
@@ -137,7 +137,7 @@ function showexpenseonscreen(obj) {
     // }).catch((err)=>console.error(err));
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.delete(`${api}/delete-expense/${obj.id}`, {
+      const res = await axios.delete(`${api}/delete-expense/${obj._id}`, {
         headers: { Authorization: token },
       });
       console.log(res);
@@ -304,7 +304,7 @@ document.getElementById("rzp-button1").onclick = async function (e) {
               {
                 status: "success",
                 order_id: options.order_id,
-                payment_id: res.razorpay_payment_id,
+                orderId: res.data.ordersaved._id,
               },
               { headers: { Authorization: token } }
             );
@@ -343,31 +343,33 @@ document.getElementById("rzp-button1").onclick = async function (e) {
     })
     .catch((err) => console.log(err));
 };
-async function downloadFileList() {
-  try {
-    const token = localStorage.getItem("token");
-    const response = await axios.get(`${api}/download`, {
-      headers: { Authorization: token },
-    });
-    if (response.status === 200) {
-      const downloadedFiles = response.data.downloads;
-      console.log(downloadedFiles);
-      // Display the list of downloaded files on the screen
-      const downloadList = document.getElementById("download-list");
-      downloadList.innerHTML = "";
-      for (let i = 0; i < downloadedFiles.length; i++) {
-        const fileLink = document.createElement("a");
-        fileLink.href = downloadedFiles[i].fileURL;
-        fileLink.textContent = downloadedFiles[i].fileName;
-        downloadList.appendChild(fileLink);
-      }
-    } else {
-      throw new Error(response.data.message);
-    }
-  } catch (err) {
-    console.log(err);
-  }
-}
+// async function downloadFileList() {
+//   try {
+//     console.log("fifi")
+//     const token = localStorage.getItem("token");
+//     const response = await axios.get(`${api}/downloadList`, {
+//       headers: { Authorization: token },
+//     });
+//     console.log(response)
+//     if (response.status === 200) {
+//       const downloadedFiles = response.data.downloads;
+//       console.log(downloadedFiles,"toyi5");
+//       // Display the list of downloaded files on the screen
+//       const downloadList = document.getElementById("download-list");
+//       downloadList.innerHTML = "";
+//       for (let i = 0; i < downloadedFiles.length; i++) {
+//         const fileLink = document.createElement("a");
+//         fileLink.href = downloadedFiles[i].fileURL;
+//         fileLink.textContent = downloadedFiles[i].fileName;
+//         downloadList.appendChild(fileLink);
+//       }
+//     } else {
+//       throw new Error(response.data.message);
+//     }
+//   } catch (err) {
+//     console.log(err);
+//   }
+// }
 async function download() {
   try {
     const token = localStorage.getItem("token");

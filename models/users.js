@@ -1,45 +1,73 @@
-const Sequelize = require("sequelize");
-const sequelize = require("../util/database");
-const Expense =require("./expense")
-const { Model } = require('sequelize');
-// Import the Order model.
-const Order = require("../models/orders");
-
-// Define the User class.
-
-
-// Export the User class.
-
-
-const Expenseusers = sequelize.define("expenseusers", {
-  id: {
-    type: Sequelize.INTEGER,
-    allowNull: false,
-    autoIncrement: true,
-    primaryKey: true,
-  },
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
+const userSchema = new Schema({
   username: {
-    type: Sequelize.STRING,
-    allowNull: false,
+    type: String,
+    required: true,
   },
   email: {
-    type: Sequelize.STRING,
-    allowNull: false,
+    type: String,
+    required: true,
   },
   password: {
-    type: Sequelize.STRING,
-    allowNull: false,
+    type: String,
+    required: true,
   },
-  isPremiumUser:Sequelize.BOOLEAN,
+  isPremiumUser: {
+    type: Boolean,
+    required: true,
+  },
   totalExpenses: {
-    type: Sequelize.INTEGER,
-    defaultValue: 0
-  }
+    type: Number,
+    required: true,
+  },
+  
 });
 
+module.exports = mongoose.model("User", userSchema);
 
-// Define the getExpenses function as an instance method
+// const Sequelize = require("sequelize");
+// const sequelize = require("../util/database");
+// const Expense =require("./expense")
+// const { Model } = require('sequelize');
+// // Import the Order model.
+// const Order = require("../models/orders");
+
+// // Define the User class.
+
+
+// // Export the User class.
+
+
+// const Expenseusers = sequelize.define("expenseusers", {
+//   id: {
+//     type: Sequelize.INTEGER,
+//     allowNull: false,
+//     autoIncrement: true,
+//     primaryKey: true,
+//   },
+//   username: {
+//     type: Sequelize.STRING,
+//     allowNull: false,
+//   },
+//   email: {
+//     type: Sequelize.STRING,
+//     allowNull: false,
+//   },
+//   password: {
+//     type: Sequelize.STRING,
+//     allowNull: false,
+//   },
+//   isPremiumUser:Sequelize.BOOLEAN,
+//   totalExpenses: {
+//     type: Sequelize.INTEGER,
+//     defaultValue: 0
+//   }
+// });
+
+
+// // Define the getExpenses function as an instance method
 
 
 
-module.exports = Expenseusers;
+// module.exports = Expenseusers;

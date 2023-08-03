@@ -1,6 +1,7 @@
 require("dotenv").config();
 const Razorpay = require("razorpay");
 const Order = require("../models/orders");
+const mongoose = require("mongoose");
 const User = require("../models/users");
 const PremiumUser = require("../models/premiumuser");
 var jwt = require("jsonwebtoken");
@@ -11,7 +12,7 @@ exports.premium = async (req, res, next) => {
     "hgtyf1f51ge5ef555sb1f5"
   );
   console.log(user);
-  console.log(req.user);
+  console.log(req.user,"hsgdyw");
   try {
     var instance = new Razorpay({
       key_id: "rzp_test_0vMGyXdywrzGmu",
@@ -23,16 +24,19 @@ exports.premium = async (req, res, next) => {
       currency: "INR",
     });
     console.log(user.userid);
-    const ordertable = await Order.create({
-      orderId: order.id,
+    const ordertable = new Order({
+      //orderId:new mongoose.Types.ObjectId(),
       status: "PENDING",
-      expenseuserid: user.userid,
+      userId: user.userid,
     });
-    console.log(ordertable, "order from order table");
+    console.log(ordertable,"table")
+    const ordersaved=await ordertable.save()
+    console.log(ordersaved, "order from order table");
 
     res.status(201).json({
       success: true,
       order,
+      ordersaved,
       orderStatus: "pending",
       message: "order is created",
     });
@@ -42,36 +46,30 @@ exports.premium = async (req, res, next) => {
   }
 };
 exports.transactionstatus = async (req, res, next) => {
-  const { status, order_id } = req.body;
+  const { status, order_id,orderId } = req.body;
   console.log(req.body, "body >>>>>>>");
-  const userId = req.user.id;
-  console.log(order_id, "order_id", status, "status", userId, ">>>>>>");
+  const userId = req.user._id;
+  console.log(order_id, "order_id", status, "status", userId, ">>>>>>",orderId);
   try {
-    const order = await Order.findOne({ where: { orderId: order_id } });
+    //const order = await Order.findOne({ orderId: order_id  });
 
-    console.log(order.orderId, ">>>>>>>");
+    //console.log(order.orderId, ">>>>>>>");
     const promise1 =
       status === "success"
-        ? order.update({ status: "SUCCESSFUL" }) //payment successful
-        : order.update({ status: "FAILED" });
+        ? await Order.updateOne({_id: orderId},{ orderId:order_id,status: "SUCCESSFUL" }) //payment successful
+        : await Order.updateOne({_id: orderId},{ orderId:order_id,status: "FAILED" });
     //await order.update({ status: "FAILED" },{where: {id: order.dataValues.id}}) //payment failed
     const promise2 =
       status === "success"
-        ? await User.update(
+        ? await User.updateOne(
+            {_id:userId},
             { isPremiumUser: true },
-            {
-              where: {
-                id: userId,
-              },
-            }
+            
           )
-        : await User.update(
+        : await User.updateOne(
+            {_id:userId},
             { isPremiumUser: false },
-            {
-              where: {
-                id: userId,
-              },
-            }
+            
           );
     Promise.all([promise1, promise2])
       .then(() => {

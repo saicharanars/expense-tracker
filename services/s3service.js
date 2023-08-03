@@ -17,7 +17,7 @@ const uploadToS3=(data, filename)=>{
         Body:data,
         ACL:'public-read'
     }
-    //console.log(s3bucket );
+    console.log(s3bucket ,params,"uytgty");
     return new Promise((resolve,reject)=>{
         s3bucket.upload(params,(err,s3response)=>{
             if(err){
