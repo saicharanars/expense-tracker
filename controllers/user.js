@@ -14,20 +14,13 @@ exports.postSignup = async (req, res, next) => {
     console.log(req.body);
     const find = await User.findOne({ email: Email });
 
-    // const [user, created] = await ExpenseUsers.findOrCreate({
-    //   where: { email: Email },
-    //   defaults: {
-    //     username: Username,
-    //     password: hashedPassword,
-    //     totalExpenses: 0,
-    //   },
-    // });
+    
     if (find) {
       console.log(find);
       console.log("email already exists");
       res
-        .status(200)
-        .json({ users: "email already used", emailexist: created }); // This will certainly be 'Technical Lead JavaScript'
+        .status(401)
+        .json({ message: "email already used" }); // This will certainly be 'Technical Lead JavaScript'
     } else {
       const hashedPassword = await bcrypt.hash(Password, 10);
       const user = new User({
@@ -39,8 +32,11 @@ exports.postSignup = async (req, res, next) => {
       });
       const created = await user.save();
       console.log(created);
-
-      res.status(200).json({ users: user, emailexist: created });
+      const responsedate={
+        username: Username,
+        email: Email,
+      }
+      res.status(200).json({ data: responsedate, message:"user creatd sucessfully" });
     }
   } catch (error) {
     console.log(error);
@@ -79,7 +75,7 @@ exports.postLogin = async (req, res, next) => {
     }
 
     if (!emailfind) {
-      res.status(404).json({ users: "email not exits please signup" });
+      res.status(404).json({ message: "email not exits please signup" });
     } else {
       const resp = await bcrypt.compare(Password, emailfind.password);
 
@@ -88,7 +84,7 @@ exports.postLogin = async (req, res, next) => {
           .status(200)
           .json({ login: resp, data: emailfind, token: jwtToken() });
       } else {
-        res.status(401).json({ login: "check your password" });
+        res.status(401).json({ message: "check your password" });
       }
       // if (emailfind.password === Password) {
       //   res.status(200).json({ user: emailfind, login: "login sucessfull" });

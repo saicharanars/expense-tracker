@@ -22,8 +22,8 @@ const bodyParser = require("body-parser");
  const forgetPasswordRoutes = require("./routes/forgotpassword");
  //const Forgotpassword = require("./models/forgotpassword");
  //const DownloadedFile = require("./models/download");
-// var cors = require("cors");
-// app.use(cors());
+var cors = require("cors");
+app.use(cors());
 // app.use(
 //   helmet({
 //     contentSecurityPolicy: false,
