@@ -38,12 +38,14 @@ exports.postExpense = async (req, res, next) => {
     const totalexpense=await User.findByIdAndUpdate(req.user._id, { totalExpenses: totalExpense });
     console.log(data,totalexpense)
     res.status(200).json({ expenses: data,message:'expense added sucessfully' });
+    return
   } catch (error) {
     
     console.log(error);
     res.status(500).json({
       error: error,
     });
+    return
   }
 };
 
