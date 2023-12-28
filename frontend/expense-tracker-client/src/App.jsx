@@ -7,15 +7,16 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 import Authform from "./components/Authform";
+import Dashboard from "./components/Dashboard";
 function App() {
     const router = createBrowserRouter([
       {
-        path: "/login",
+        path: "/",
         element: <Authform />,
       },
       {
         path: "/dashboard",
-        element: <h1>dahboard</h1>,
+        element: <Dashboard/>,
       },
 
     ]);

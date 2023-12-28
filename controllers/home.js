@@ -27,13 +27,17 @@ exports.postExpense = async (req, res, next) => {
       userId: userId
       
     });
+    if (!expense.expenseamount || !expense.category || !expense.expensetype || !expense.userId){
+        res.status(400).json({ message:'expense data missing' });
+        return;
+    }
     //const totalExpense = Number(req.user.totalExpenses) + Number(expenseamount);
     const data=await expense.save()
     const totalExpense =Number(req.user.totalExpenses) + Number(data.expenseamount);
 
     const totalexpense=await User.findByIdAndUpdate(req.user._id, { totalExpenses: totalExpense });
     console.log(data,totalexpense)
-    res.status(200).json({ expenses: data });
+    res.status(200).json({ expenses: data,message:'expense added sucessfully' });
   } catch (error) {
     
     console.log(error);

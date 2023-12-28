@@ -9,6 +9,7 @@ import { useRef, useContext } from "react";
 import AuthContext from "../store/Authcontext";
 import axios from "axios";
 import { Navigate } from "react-router-dom";
+import Alert from '@mui/material/Alert';
 
 export default function Authform() {
   const emailInputref = useRef();
@@ -168,7 +169,7 @@ export default function Authform() {
             </Grid>
           )}
           {signupInProgress && <p>Sending Request...</p>}
-          {signupSuccess && <p style={{ color: "green" }}>{signupSuccess}</p>}
+          {signupSuccess && <Alert severity="success">{signupSuccess}</Alert>}
 
           <Grid item sx={{ padding: 2 }}>
             <Button type="submit" variant="contained" fullWidth>
@@ -180,9 +181,10 @@ export default function Authform() {
               {isLogin ? "signup" : "login"}
             </Button>
           </Grid>
+          {loggedin && <Alert severity="success">login sucessful</Alert>}
           {loggedin && <Navigate to="/dashboard" replace={true} />}
+        {error && <Alert severity="warning">{error}</Alert>}
         </Container>
-        {error && <p>{error}</p>}
       </Grid>
     </form>
   );

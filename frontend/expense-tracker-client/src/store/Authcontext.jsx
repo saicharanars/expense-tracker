@@ -31,9 +31,9 @@ export const AuthContextProvider = (props) => {
         const inactiveTime = currentTime - loginTime;
         const minutesInactive = Math.floor(inactiveTime / 1000 / 60);
 
-        if (minutesInactive >= 5) {
+        if (minutesInactive >= 45) {
           logoutHandler();
-          window.location.href = "/logout"; // Redirect to the logout page
+          window.location.href = "/"; // Redirect to the logout page
         }
       };
 
