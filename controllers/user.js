@@ -1,8 +1,8 @@
 const path = require("path");
 const rootDir = path.dirname(__dirname);
 const User = require("../models/users");
-var bcrypt = require("bcryptjs");
-var jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 exports.postSignup = async (req, res, next) => {
   try {

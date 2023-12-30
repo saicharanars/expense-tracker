@@ -1,16 +1,13 @@
 import { useState, useEffect } from "react";
-import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
-// import { useHistory } from "react-router-dom";
 import { useRef, useContext } from "react";
 import AuthContext from "../store/Authcontext";
 import axios from "axios";
 import { Navigate } from "react-router-dom";
-import Alert from '@mui/material/Alert';
-import Productlist from "./Productlist";
+import Alert from "@mui/material/Alert";
 export default function Authform() {
   const emailInputref = useRef();
   const passwordInputref = useRef();
@@ -183,7 +180,7 @@ export default function Authform() {
           </Grid>
           {loggedin && <Alert severity="success">login sucessful</Alert>}
           {loggedin && <Navigate to="/dashboard" replace={true} />}
-        {error && <Alert severity="warning">{error}</Alert>}
+          {error && <Alert severity="warning">{error}</Alert>}
         </Container>
       </Grid>
     </form>

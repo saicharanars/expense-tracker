@@ -12,6 +12,8 @@ router.get("/",homeController.getExpense);
 //router.get("/get-data/:id",homeController.getData);
 router.post("/add-expense",auth.authenticate,homeController.postExpense);
 router.delete('/delete-expense/:id',auth.authenticate,homeController.postDelete);
+router.put('/edit-expense/:id',auth.authenticate,homeController.updateExpense);
+
 router.get('/showLeaderBoard',auth.authenticate,homeController.getUserLeaderBoard);
 router.get('/download',auth.authenticate,homeController.downloadexpense);
 //router.get('/downloadlist',auth.authenticate,downloadController.listDownloads);

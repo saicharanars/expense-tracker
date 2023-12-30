@@ -155,3 +155,57 @@ exports.getExpenses = async (req, res) => {
         console.log(error);
     }
 };
+exports.updateExpense = async (req, res, next) => {
+    try {
+      //const { name, email, phone } = req.body;
+      //t = await sequelize.transaction();
+      
+      const {expenseamount,expensecategory,expensetype,prevamount} = req.body
+      console.log(req.body,"gnikfb")
+      if (!req.params.id) {
+        console.log("ID IS MISSING");
+        return res.status(400).json({ message: "ID is missing" });
+      }
+      const expenseid = req.params.id
+  
+      const userId = req.user.id;
+     
+      const updatedexpense = {
+        expenseamount: expenseamount,
+        category: expensecategory,
+        expensetype: expensetype,
+        userId: userId 
+      };
+      console.log(updatedexpense,"gbhkfh")
+      if (!updatedexpense.expenseamount || !updatedexpense.category || !updatedexpense.expensetype || !updatedexpense.userId){
+          res.status(400).json({ message:'expense data missing' });
+          return;
+      }
+      
+    const update = await Expense.findByIdAndUpdate(expenseid,updatedexpense)
+      
+      console.log(update)
+      if (prevamount > expenseamount){
+        updatedamount = prevamount-expenseamount
+        const totalExpense = Number(req.user.totalExpenses) - Number(expenseamount);
+        const updatedtotalexpense=await User.findByIdAndUpdate(req.user._id, { totalExpenses: totalExpense });
+        res.status(200).json({ updatedexpense: update,totalexpense:updatedtotalexpense,message:'expense added sucessfully' });
+        return
+      }else{
+        updatedamount = expenseamount-prevamount
+        const totalExpense = Number(req.user.totalExpenses) + Number(expenseamount);
+        const updatedtotalexpense=await User.findByIdAndUpdate(req.user._id, { totalExpenses: totalExpense });
+        res.status(200).json({ updatedexpense: update,totalexpense:updatedtotalexpense,message:'expense added sucessfully' });
+        return
+      }
+    
+      
+    } catch (error) {
+      
+      console.log(error);
+      res.status(500).json({
+        error: error,
+      });
+      return
+    }
+  };
