@@ -49,18 +49,6 @@ exports.postExpense = async (req, res, next) => {
   }
 };
 
-// exports.getData = async (req, res, next) => {
-//   try {
-//     uId=req.params.id
-    
-//     const data = await Expense.find({_id:uId});
-//     res.status(200).json({ expenses: data });
-//   } catch (error) {
-//     console.log(error);
-//     res.status(500).json({ error: error });
-//   }
-// };
-
 exports.postDelete = async (req, res, next) => {
   let t;
   try {
@@ -189,13 +177,13 @@ exports.updateExpense = async (req, res, next) => {
         updatedamount = prevamount-expenseamount
         const totalExpense = Number(req.user.totalExpenses) - Number(expenseamount);
         const updatedtotalexpense=await User.findByIdAndUpdate(req.user._id, { totalExpenses: totalExpense });
-        res.status(200).json({ updatedexpense: update,totalexpense:updatedtotalexpense,message:'expense added sucessfully' });
+        res.status(200).json({ updatedexpense: update,totalexpense:updatedtotalexpense,message:'expense updated sucessfully' });
         return
       }else{
         updatedamount = expenseamount-prevamount
         const totalExpense = Number(req.user.totalExpenses) + Number(expenseamount);
         const updatedtotalexpense=await User.findByIdAndUpdate(req.user._id, { totalExpenses: totalExpense });
-        res.status(200).json({ updatedexpense: update,totalexpense:updatedtotalexpense,message:'expense added sucessfully' });
+        res.status(200).json({ updatedexpense: update,totalexpense:updatedtotalexpense,message:'expense updated sucessfully' });
         return
       }
     

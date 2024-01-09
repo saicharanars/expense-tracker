@@ -3,28 +3,33 @@ import Container from "@mui/material/Container";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
-import { useRef, useContext } from "react";
-import AuthContext from "../store/Authcontext";
+import { useRef,  } from "react";
+
 import axios from "axios";
 import { Navigate } from "react-router-dom";
 import Alert from "@mui/material/Alert";
+import { useDispatch, useSelector } from "react-redux";
+import { authActions } from "../redux/Authreducer";
+import store from "../redux/store";
+import { Typography } from "@mui/material";
 export default function Authform() {
   const emailInputref = useRef();
   const passwordInputref = useRef();
   const confirmpasswordInputref = useRef();
   const userinputref = useRef();
-  const authCtx = useContext(AuthContext);
-  const token = localStorage.getItem("token");
+  const token = useSelector((state)=>state.auth.token)
+  const dispatch = useDispatch()
 
   const [isLogin, setIsLogin] = useState(true);
-  const [showError, setShowError] = useState("");
   const [signupInProgress, setSignupInProgress] = useState(false);
   const [signupSuccess, setSignupSuccess] = useState("");
   const [passwordMatch, setPasswordMatch] = useState(false);
   const [loggedin, setLoggedin] = useState(false);
   const [error, setError] = useState("");
   useEffect(() => {
+    
     if (token) {
+        console.log(token)
       setLoggedin(true);
     }
   }, [token]);
@@ -51,10 +56,14 @@ export default function Authform() {
         const status = res.status;
         switch (status) {
           case 200:
-            authCtx.login(res.data.token);
-            setLoggedin(true);
+            dispatch(authActions.login({
+                token: res.data.token,
+                email: email,
+              }));
+            console.log('State:', store.getState());
+            window.location.href = "/home"
+            
             break;
-          // Handle other status codes...
         }
       } catch (error) {
         // Handle errors, including 404
@@ -121,7 +130,7 @@ export default function Authform() {
           alignItems: "center",
           minHeight: "100vh",
           minWidth: "100vw",
-          bgcolor: "palegreen",
+          bgcolor: "#Fbdede",
         }}
       >
         <Container
@@ -130,6 +139,11 @@ export default function Authform() {
             bgcolor: "white",
           }}
         >
+             <Grid item sx={{ padding: 2 }}>
+             <Typography variant="h4" component="h5">
+                Expense Tracker
+              </Typography>
+          </Grid>
           <Grid item sx={{ padding: 2 }}>
             <TextField label="Email" fullWidth inputRef={emailInputref} />
           </Grid>
@@ -169,12 +183,18 @@ export default function Authform() {
           {signupSuccess && <Alert severity="success">{signupSuccess}</Alert>}
 
           <Grid item sx={{ padding: 2 }}>
-            <Button type="submit" variant="contained" fullWidth>
+            <Button  sx={{
+              backgroundColor: "#FF9292",
+              "&:hover": {
+                backgroundColor: "#FF9292",
+              },
+            }}type="submit" variant="contained" fullWidth>
               {isLogin ? "Login" : "Create Account"}
             </Button>
           </Grid>
           <Grid item sx={{ padding: 2 }}>
-            <Button onClick={switchbutton} variant="text" fullWidth>
+            <Button  sx={{
+              color: "#FF9292",}} onClick={switchbutton} variant="text" fullWidth>
               {isLogin ? "signup" : "login"}
             </Button>
           </Grid>

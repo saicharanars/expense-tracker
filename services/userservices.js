@@ -23,7 +23,7 @@ const getExpenses = async (req, { offset = null, limit = null } = {}) => {
   
     
   
-    const expenses = await Expense.find({userId:req}).skip(offset).limit(limit);
+    const expenses = await Expense.find({userId:req}).skip(offset).limit(limit).sort({ createdAt: -1 });;
   
     return expenses;
   };

@@ -1,8 +1,10 @@
 const path = require("path");
 const rootDir = path.dirname(__dirname);
 const User = require("../models/users");
+const Expense = require("../models/expense")
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const mongoose = require("mongoose");
 
 exports.postSignup = async (req, res, next) => {
   try {
@@ -61,7 +63,9 @@ exports.postLogin = async (req, res, next) => {
     // const find = await User.findAll();
     // console.log(find,"findall");
     const emailfind = await User.findOne({ email: Email });
-    console.log(emailfind, "emailfind");
+    const expensecount = await Expense.count({userId: emailfind.id});
+    
+    console.log(emailfind,expensecount,">>>>>>>>>>emailfind");
     function jwtToken() {
       return jwt.sign(
         {
@@ -69,6 +73,7 @@ exports.postLogin = async (req, res, next) => {
           userid: emailfind.id,
           totalExpenses: emailfind.totalExpenses,
           premium: emailfind.isPremiumUser,
+          expensecount:expensecount
         },
         "hgtyf1f51ge5ef555sb1f5"
       );
