@@ -77,6 +77,8 @@ const Homepage = () => {
               backgroundColor: "#F9FAFC",
               height: "90%",
               overflow: "hidden",
+              display:"flex",
+              flexDirection:"column",
               p: {xs:0,md:1},
               borderRadius: 5,
             }}

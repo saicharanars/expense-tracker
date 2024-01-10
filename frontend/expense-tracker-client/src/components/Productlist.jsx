@@ -41,7 +41,7 @@ const Productlist = () => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [expensecount, setExpensecount] = useState(10);
   const [deletestatus, setDeletestatus] = useState("");
-  const url = "http://localhost:4000/";
+  const url = "http://3.110.221.145:4000/";
   function parseJwt(token) {
     var base64Url = token.split(".")[1];
     var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");

@@ -18,7 +18,7 @@ import HomeWorkIcon from '@mui/icons-material/HomeWork';
 import LocalGroceryStore from "@mui/icons-material/LocalGroceryStore";
 export default function Latestexpenselist() {
   const token = useSelector((state) => state.auth.token);
-  const url = "http://localhost:4000/";
+  const url = "http://3.110.221.145:4000/";
   const [items, setItems] = useState();
 
   const expense = async (offset, limit) => {

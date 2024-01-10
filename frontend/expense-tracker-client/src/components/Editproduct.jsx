@@ -26,7 +26,7 @@ const Editproduct = () => {
 
   const updatebutton = useSelector((state) => state.expense.updatebutton);
   const [validation, setValidation] = useState({});
-  const url = "http://localhost:4000/";
+  const url = "http://3.110.221.145:4000/";
   const token = useSelector((state) => state.auth.token);
   const items = useSelector((state) => state.expense.items);
   const editexpensedata = useSelector((state) => state.expense.editexpensedata);

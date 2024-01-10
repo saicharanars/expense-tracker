@@ -30,7 +30,7 @@ export const AuthContextProvider = (props) => {
   const [updatebutton, setUpdatebutton] = useState(false);
 
   const userIsLoggedIn = !!token;
-  const url = "http://localhost:4000/";
+  const url = "http://3.110.221.145:4000/";
 
   const expense = async (currentpage, rowsperpage) => {
     setCurrentPage(currentpage);
