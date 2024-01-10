@@ -23,6 +23,7 @@ const bodyParser = require("body-parser");
  //const Forgotpassword = require("./models/forgotpassword");
  //const DownloadedFile = require("./models/download");
 var cors = require("cors");
+app.options('*', cors())
 app.use(
     cors({
       origin: "*",
