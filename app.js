@@ -23,7 +23,12 @@ const bodyParser = require("body-parser");
  //const Forgotpassword = require("./models/forgotpassword");
  //const DownloadedFile = require("./models/download");
 var cors = require("cors");
-app.use(cors());
+app.use(
+    cors({
+      origin: "https://expense-tracker-bice-chi.vercel.app/",
+      methods: ["GET", "POST", "PUT", "DELETE"],
+    })
+  );
 // app.use(
 //   helmet({
 //     contentSecurityPolicy: false,
