@@ -25,7 +25,7 @@ const bodyParser = require("body-parser");
 var cors = require("cors");
 app.use(
     cors({
-      origin: "https://expense-tracker-bice-chi.vercel.app/",
+      origin: "*",
       methods: ["GET", "POST", "PUT", "DELETE"],
     })
   );
