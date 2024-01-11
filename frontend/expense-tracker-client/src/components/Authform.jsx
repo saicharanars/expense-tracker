@@ -43,7 +43,7 @@ export default function Authform() {
     const email = emailInputref.current.value;
     const password = passwordInputref.current.value;
     setSignupInProgress(true);
-    const url = "http://3.110.221.145:4000/";
+    const url = "https://expense-tracker-mzom.onrender.com/";
     const body = {
       email: email,
       password: password,
