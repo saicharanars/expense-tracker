@@ -6,9 +6,14 @@ import { Link } from "react-router-dom";
 
 import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "../redux/Authreducer";
+// import payment from "./paymenthandler";
+import store from "../redux/store";
 
 const Sidebar = () => {
-  const [selectedIndex, setSelectedIndex] = React.useState(1);
+  const [selectedIndex, setSelectedIndex] = React.useState(0);
+  
+  const stored = store.getState();
+  const token = stored.auth.token;
   const dispatch = useDispatch()
   const handleListItemClick = (event, index) => {
     setSelectedIndex(index);
@@ -20,6 +25,11 @@ const handlelogout = (e)=>{
     dispatch(authActions.logout())
     window.location.href = "/login"
 }
+// const premium = (e)=>{
+//     // e.preventDefault();
+//     payment(token);
+// }
+
   return (
     <List
       sx={{
@@ -72,6 +82,23 @@ const handlelogout = (e)=>{
               primary="Logout"
             />
           </ListItemButton>
+          {/* <ListItemButton
+            onClick={(event) => premium()}
+            sx={{
+              mt: 4,
+              px: 5,
+              color:  "#DD7A7A",
+              textDecoration:"none"
+            }}
+          >
+            <ListItemText
+              sx={{
+                fontWeight: "bold",
+                textDecoration:"none"
+              }}
+              primary="premium"
+            />
+          </ListItemButton> */}
     </List>
   );
 };

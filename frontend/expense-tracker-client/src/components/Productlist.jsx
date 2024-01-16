@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
-import TableCell,{tableCellClasses} from "@mui/material/TableCell";
+import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import Paper from "@mui/material/Paper";
@@ -28,7 +28,8 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import Addproduct from "./Addproduct";
 import Editproduct from "./Editproduct";
-import { styled } from '@mui/material/styles';
+import { styled } from "@mui/material/styles";
+import LinearProgress from "@mui/material/LinearProgress";
 
 const Productlist = () => {
   const dispatch = useDispatch();
@@ -41,6 +42,7 @@ const Productlist = () => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [expensecount, setExpensecount] = useState(10);
   const [deletestatus, setDeletestatus] = useState("");
+  const [loading,setLoading] = useState(true)
   const url = "https://expense-tracker-mzom.onrender.com/";
   function parseJwt(token) {
     var base64Url = token.split(".")[1];
@@ -86,6 +88,7 @@ const Productlist = () => {
     );
     const data = response.data.expenses;
     console.log(data);
+    setLoading(false)
     dispatch(getExpenseslice(data));
   };
 
@@ -193,36 +196,43 @@ const Productlist = () => {
               }}
             >
               <Stack direction="row">
+
                 <TableContainer
                   sx={{
-                    p: 1,
-                  }}
-                >
+                      p: 1,
+                    }}
+                    >
                   {deletestatus && (
                     <Snackbar open={!!deletestatus} autoHideDuration={1000}>
                       <Alert severity="error">{deletestatus}</Alert>
                     </Snackbar>
                   )}
+                    {loading && <LinearProgress color="inherit" />}
 
                   <Table
                     component={Paper}
                     sx={{ minWidth: 200 }}
                     aria-label="simple table"
-                    stickyHeader 
+                    stickyHeader
                   >
-                    <TableHead sx={{
-                        backgroundColor:"#F9FAFC"
-                    }}>
+
+                    <TableHead
+                      sx={{
+                        backgroundColor: "#F9FAFC",
+                      }}
+                    >
                       <TableRow>
                         <StyledTableCell>Name</StyledTableCell>
                         <StyledTableCell align="right">Amount</StyledTableCell>
-                        <StyledTableCell align="right">Category</StyledTableCell>
+                        <StyledTableCell align="right">
+                          Category
+                        </StyledTableCell>
                         <StyledTableCell align="right">Edit</StyledTableCell>
                         <StyledTableCell align="right">Delete</StyledTableCell>
-
                       </TableRow>
                     </TableHead>
                     <TableBody>
+
                       {expenseitems &&
                         expenseitems.map((row) => (
                           <TableRow
@@ -282,25 +292,21 @@ const Productlist = () => {
                   </Table>
                 </TableContainer>
                 {updatebutton && (
-                  
-                    <Stack direction="column">
-                      <IconButton
-                        sx={{
-                          float: "right",
-                          alignSelf:"flex-end",
-                          width:"2rem",
-                        }}
-                        onClick={() => setUpdatebutton(false)}
-                        aria-label="close"
-                        
-                      >
-                        <CloseIcon />
-                      </IconButton>
-                    
-                    <Editproduct />
-                    </Stack>
+                  <Stack direction="column">
+                    <IconButton
+                      sx={{
+                        float: "right",
+                        alignSelf: "flex-end",
+                        width: "2rem",
+                      }}
+                      onClick={() => setUpdatebutton(false)}
+                      aria-label="close"
+                    >
+                      <CloseIcon />
+                    </IconButton>
 
-                  
+                    <Editproduct />
+                  </Stack>
                 )}
               </Stack>
             </Container>

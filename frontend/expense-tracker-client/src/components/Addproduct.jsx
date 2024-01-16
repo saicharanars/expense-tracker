@@ -21,6 +21,7 @@ const Addproduct = () => {
   const expenseInputref = useRef();
   const amountInputref = useRef("");
   const expensetypeInputref = useRef();
+  const source = axios.CancelToken.source();
 
   const updatebutton = useSelector((state) => state.expense.updatebutton);
   const [validation, setValidation] = useState({});
@@ -41,7 +42,7 @@ const Addproduct = () => {
     setCategory(event.target.value);
   };
 
- const handlesubmit = (e) => {
+  const handlesubmit = (e) => {
     e.preventDefault();
     const expense = expenseInputref.current.value;
     const amount = amountInputref.current.value;
@@ -64,11 +65,19 @@ const Addproduct = () => {
       const editexpense = async (body) => {
         try {
           console.log(updateitem);
+          const timeoutId = setTimeout(() => {
+            source.cancel("Request timeout");
+            result = { message: "request timedout please try again", validation: "error" };
+            setValidation(result); // Cancel the request with a custom message
+          }, 5000);
           const res = await axios.put(
             `${url}edit-expense/${editexpensedata._id}`,
             updateitem,
             {
               headers: { Authorization: token },
+            },
+            {
+              cancelToken: source.token,
             }
           );
           const status = res.status;
@@ -88,6 +97,7 @@ const Addproduct = () => {
               }
               return item; // Keep other items unchanged
             });
+            clearTimeout(timeoutId);
             result = { message: res.data.message, validation: "success" };
             setValidation(result);
             setTimeout(() => {
@@ -112,9 +122,21 @@ const Addproduct = () => {
     } else {
       const addExpense = async (body) => {
         try {
-          const res = await axios.post(`${url}add-expense`, body, {
-            headers: { Authorization: token },
-          });
+          const timeoutId = setTimeout(() => {
+            source.cancel("Request timeout");
+            result = { message: "request timedout, please try again", validation: "error" };
+            setValidation(result); // Cancel the request with a custom message
+          }, 5000);
+          const res = await axios.post(
+            `${url}add-expense`,
+            body,
+            {
+              headers: { Authorization: token },
+            },
+            {
+              cancelToken: source.token,
+            }
+          );
 
           if (res.status === 200) {
             const loadedExpItem = {
@@ -123,6 +145,7 @@ const Addproduct = () => {
               category: res.data.expenses.category,
               expensetype: res.data.expenses.expensetype,
             };
+            clearTimeout(timeoutId);
             console.log(loadedExpItem);
             dispatch(addExpenseslice(loadedExpItem));
             result = { message: res.data.message, validation: "success" };

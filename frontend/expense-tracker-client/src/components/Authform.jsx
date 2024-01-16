@@ -3,7 +3,8 @@ import Container from "@mui/material/Container";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
-import { useRef,  } from "react";
+import { useRef } from "react";
+import LinearProgress from "@mui/material/LinearProgress";
 
 import axios from "axios";
 import { Navigate } from "react-router-dom";
@@ -12,13 +13,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "../redux/Authreducer";
 import store from "../redux/store";
 import { Typography } from "@mui/material";
+const CancelToken = axios.CancelToken;
 export default function Authform() {
   const emailInputref = useRef();
   const passwordInputref = useRef();
   const confirmpasswordInputref = useRef();
   const userinputref = useRef();
-  const token = useSelector((state)=>state.auth.token)
-  const dispatch = useDispatch()
+  const token = useSelector((state) => state.auth.token);
+  const dispatch = useDispatch();
+  const source = CancelToken.source();
 
   const [isLogin, setIsLogin] = useState(true);
   const [signupInProgress, setSignupInProgress] = useState(false);
@@ -27,9 +30,8 @@ export default function Authform() {
   const [loggedin, setLoggedin] = useState(false);
   const [error, setError] = useState("");
   useEffect(() => {
-    
     if (token) {
-        console.log(token)
+      console.log(token);
       setLoggedin(true);
     }
   }, [token]);
@@ -39,30 +41,41 @@ export default function Authform() {
   };
   const handlesubmit = async (e) => {
     e.preventDefault();
-
+    const timeoutId = setTimeout(() => {
+      source.cancel("Request timeout");
+      setSignupInProgress(false);
+      setError("Request timedout,please retry"); // Cancel the request with a custom message
+    }, 5000);
     const email = emailInputref.current.value;
     const password = passwordInputref.current.value;
     setSignupInProgress(true);
     const url = "https://expense-tracker-mzom.onrender.com/";
+
     const body = {
       email: email,
       password: password,
     };
     if (isLogin) {
       try {
-        const res = await axios.post(`${url}login`, body);
-
+        const res = await axios.post(`${url}login`, body, {
+          cancelToken: source.token,
+        });
+        clearTimeout(timeoutId);
         // Handle successful response
         const status = res.status;
         switch (status) {
           case 200:
-            dispatch(authActions.login({
+            dispatch(
+              authActions.login({
                 token: res.data.token,
                 email: email,
-              }));
-            console.log('State:', store.getState());
-            window.location.href = "/home"
-            
+              })
+            );
+            console.log("State:", store.getState());
+            setSignupInProgress(false);
+
+            window.location.href = "/home";
+
             break;
         }
       } catch (error) {
@@ -70,10 +83,13 @@ export default function Authform() {
         if (error.response && error.response.status === 404) {
           console.log(error.response);
           setError(error.response.data.message);
+          setSignupInProgress(false);
         } else if (error.response && error.response.status === 401) {
           setError(error.response.data.message);
+          setSignupInProgress(false);
         } else if (error.response && error.response.status === 500) {
           setError("Internal server error");
+          setSignupInProgress(false);
         }
       }
     } else {
@@ -84,7 +100,10 @@ export default function Authform() {
           username: username,
         };
         setSignupInProgress(true);
-        const res = await axios.post(`${url}signup`, signupbody);
+        const res = await axios.post(`${url}signup`, signupbody, {
+          cancelToken: source.token,
+        });
+        clearTimeout(timeoutId);
 
         // Handle successful response
         const status = res.status;
@@ -139,10 +158,10 @@ export default function Authform() {
             bgcolor: "white",
           }}
         >
-             <Grid item sx={{ padding: 2 }}>
-             <Typography variant="h4" component="h5">
-                Expense Tracker
-              </Typography>
+          <Grid item sx={{ padding: 2 }}>
+            <Typography variant="h4" component="h5">
+              Expense Tracker
+            </Typography>
           </Grid>
           <Grid item sx={{ padding: 2 }}>
             <TextField label="Email" fullWidth inputRef={emailInputref} />
@@ -179,22 +198,37 @@ export default function Authform() {
               />
             </Grid>
           )}
-          {signupInProgress && <p>Sending Request...</p>}
+          {signupInProgress && (
+            <Grid item sx={{ padding: 2 }}>
+              <LinearProgress />
+            </Grid>
+          )}
           {signupSuccess && <Alert severity="success">{signupSuccess}</Alert>}
 
           <Grid item sx={{ padding: 2 }}>
-            <Button  sx={{
-              backgroundColor: "#FF9292",
-              "&:hover": {
+            <Button
+              sx={{
                 backgroundColor: "#FF9292",
-              },
-            }}type="submit" variant="contained" fullWidth>
+                "&:hover": {
+                  backgroundColor: "#FF9292",
+                },
+              }}
+              type="submit"
+              variant="contained"
+              fullWidth
+            >
               {isLogin ? "Login" : "Create Account"}
             </Button>
           </Grid>
           <Grid item sx={{ padding: 2 }}>
-            <Button  sx={{
-              color: "#FF9292",}} onClick={switchbutton} variant="text" fullWidth>
+            <Button
+              sx={{
+                color: "#FF9292",
+              }}
+              onClick={switchbutton}
+              variant="text"
+              fullWidth
+            >
               {isLogin ? "signup" : "login"}
             </Button>
           </Grid>
